@@ -1,0 +1,10 @@
+飞书日历权限配置链接：
+https://open.feishu.cn/app/cli_a926c6c775f8dcd2/auth?q=calendar:calendar:readonly,calendar:calendar,calendar:calendar.calendar:readonly,calendar:calendar:read&op_from=openapi&token_type=tenant
+
+需要配置的权限：
+- calendar:calendar:readonly (日历只读权限)
+- calendar:calendar (日历读写权限)
+- calendar:calendar.calendar:readonly (日历日历只读权限)
+- calendar:calendar:read (日历读取权限)
+
+至少需要配置其中一个权限。

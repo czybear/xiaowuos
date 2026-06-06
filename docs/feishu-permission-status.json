@@ -1,0 +1,6 @@
+{
+  "timestamp": "2026-06-05T21:13:26.647Z",
+  "status": "disabled",
+  "error": "日历权限未配置",
+  "solution": "请配置日历权限: https://open.feishu.cn/app/cli_a926c6c775f8dcd2/auth"
+}
