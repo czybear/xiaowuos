@@ -5,3 +5,8 @@ credentials
 logs
 node_modules
 macos-openclaw-backup
+config/*.json
+!config/*.example.json
+*.secret
+config/**/*.json
+!config/**/*.example.json
