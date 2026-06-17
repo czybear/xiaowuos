@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>xiaowuOS · 总状态仪表盘</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:#f2f3f5;color:#1d1d1f;line-height:1.6;padding:24px 16px;max-width:960px;margin:0 auto}
+h1{text-align:center;font-size:24px;font-weight:700;margin-bottom:4px;letter-spacing:-.3px}
+.subtitle{text-align:center;color:#86868b;font-size:13px;margin-bottom:28px}
+.section{margin-bottom:20px}
+.section-title{font-size:18px;font-weight:600;padding:0 4px 8px;border-bottom:1px solid #d2d2d7;margin-bottom:12px}
+.card{background:#fff;border-radius:14px;padding:16px 18px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);transition:box-shadow .2s}
+.card:hover{box-shadow:0 2px 12px rgba(0,0,0,.1)}
+.row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:14px;border-bottom:1px solid #f2f2f7}
+.row:last-child{border-bottom:none}
+.label{color:#86868b;font-size:13px;min-width:90px}
+.value{font-weight:500;text-align:right;flex:1}
+
+/* Status badges */
+.badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.3px;text-transform:uppercase}
+.green{background:#e8f5e9;color:#2e7d32}.blue{background:#e3f2fd;color:#1565c0}.yellow{background:#fff8e1;color:#f57f17}.red{background:#ffebee;color:#c62828}.gray{background:#f5f5f5;color:#616161}
+
+/* Agent grid - 3 columns desktop, 1 column mobile */
+.agent-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:768px){.agent-grid{grid-template-columns:1fr}}
+
+/* Luffy captain card - full width, slightly elevated */
+.captain-card{background:#fff;border-radius:14px;padding:18px 22px;margin-bottom:10px;box-shadow:0 2px 10px rgba(0,0,0,.09);border-left:5px solid #0071e3;position:relative}
+.captain-card .agent-name{font-size:18px;font-weight:700}
+.captain-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px}
+
+.agent-card{background:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 1px 4px rgba(0,0,0,.06);border-left:4px solid #ccc;position:relative}
+.agent-name{font-size:16px;font-weight:600;display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.agent-title{font-size:12px;color:#86868b;margin-bottom:8px}
+.agent-info{font-size:13px}.agent-info .row{padding:3px 0;font-size:13px}
+.local-only-tag{position:absolute;top:8px;right:10px;font-size:10px;background:#fff3e0;color:#e65100;padding:2px 6px;border-radius:4px;font-weight:600}
+
+/* Task list */
+.task-item{padding:8px 0;border-bottom:1px solid #f2f2f7;font-size:13px;display:flex;align-items:flex-start;gap:8px}
+.task-item:last-child{border-bottom:none}
+.task-priority{flex-shrink:0;padding:1px 6px;border-radius:4px;font-weight:600;font-size:11px;color:#fff;background:#8c9bab}
+.p0-badge{background:#ef5350}.p1-badge{background:#ffa726}.p2-badge{background:#42a5f5}
+.task-title{flex:1;font-weight:500}
+.task-owner{color:#86868b;font-size:12px;white-space:nowrap;margin-left:auto}
+
+/* Summary chips */
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.chip{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.chip .num{font-weight:700;margin-right:2px}
+
+/* Model list */
+.model-list{font-size:13px;padding-left:18px;color:#555}
+.model-list li{margin-bottom:4px}
+.warn-box{background:#fff8e1;border-radius:10px;padding:10px 14px;font-size:12px;color:#f57f17;margin-top:8px}
+
+/* Refresh */
+.refresh-bar{text-align:center;margin-bottom:16px}
+.refresh-btn{padding:8px 24px;border-radius:20px;border:none;background:#0071e3;color:#fff;font-size:13px;font-weight:500;cursor:pointer;transition:background .2s}
+.refresh-btn:hover{background:#0077ed}
+.refresh-time{font-size:11px;color:#86868b;margin-top:4px}
+
+/* Responsive */
+@media(max-width:600px){body{padding:12px 8px}.agent-grid{grid-template-columns:1fr}.captain-card .captain-grid{grid-template-columns:1fr}.row{flex-direction:column;gap:1px}.value{text-align:left}}
+</style>
+</head>
+<body>
+<h1>xiaowuOS · 总状态仪表盘</h1>
+<p class="subtitle">V1.0 — 静态数据版 · 手动刷新</p>
+<div class="refresh-bar">
+<button class="refresh-btn" onclick="loadData()">🔄 刷新数据</button>
+<div class="refresh-time" id="refreshTime"></div>
+</div>
+<div id="app"></div>
+
+<script>
+const ST={idle:'green',busy:'blue',pending:'yellow',failed:'red',offline:'red',online:'green',not_active:'yellow',not_configured:'yellow',running:'green',stopped:'red'};
+const SL={idle:'空闲',busy:'工作中',pending:'待确认',failed:'异常',offline:'离线',online:'在线',not_active:'未激活',not_configured:'未配置',running:'运行中',stopped:'已停止'};
+let DATA=null;
+
+async function loadData(){
+try{const r=await fetch('dashboard.json?t='+Date.now());DATA=await r.json();render();
+document.getElementById('refreshTime').textContent='数据更新于 '+new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});}
+catch(e){document.getElementById('app').innerHTML='<p style="color:red;text-align:center">加载 dashboard.json 失败: '+e.message+'</p>';}}
+
+function badge(cls,txt){return '<span class="badge '+cls+'">'+txt+'</span>';}
+function tag(p){if(p==='P0')return 'class="p0-badge"';if(p==='P1')return 'class="p1-badge"';return 'class="p2-badge"';}
+
+function render(){if(!DATA)return;const a=document.getElementById('app');let h='';h+=renderSystem();h+=renderTeam();h+=renderTasks();h+=renderMainStandby();h+=renderModels();a.innerHTML=h;}
+
+function renderSystem(){const s=DATA.system;let wns=s.anomalies?
+s.anomalies.map(a=>'<div class="row"><span class="label">'+(a.type==='warning'?'⚠️':'ℹ️')+'</span><span>'+a.message+'</span></div>').join(''):'';
+return `<div class="section"><div class="section-title">🖥️ 系统总览</div>
+<div class="card"><div class="row"><span class="label">主机</span><span class="value">${s.hostname}</span></div>
+<div class="row"><span class="label">运行时间</span><span class="value">${s.uptime}</span></div>
+<div class="row"><span class="label">磁盘</span><span class="value">${s.disk_free}</span></div>
+<div class="row"><span class="label">OpenClaw</span><span class="value">${s.openclaw_version} ${badge(ST[s.gateway_status]||'gray',SL[s.gateway_status])}</span></div>
+${wns||''}</div></div>`;}
+
+function renderTeam(){const members=DATA.team;
+// Separate Luffy (captain) from crew
+const captain=members.find(m=>m.name==='路飞');
+const crew=members.filter(m=>m.name!=='路飞');
+
+function makeAgentCard(m,isCaptain){
+  const cls=ST[m.status]||'gray';const lbl=SL[m.status]||m.status;
+  let lo='';if(m.local_only)lo='<span class="local-only-tag">🔒 Local Only</span>';
+  if(isCaptain){
+    return `<div class="captain-card">
+${lo}<div class="agent-name">🏴 ${m.name} ${badge(cls,lbl)}</div><div class="agent-title">⚡ 总控 · 船长 — 调度中枢</div>
+<div class="captain-grid">
+<div class="agent-info"><div class="row"><span class="label">模型</span><span>${m.model}</span></div>
+<div class="row"><span class="label">来源</span><span>${m.source==='local'?'🏠 本地':'☁️ Cloud'}</span></div></div>
+<div class="agent-info"><div class="row"><span class="label">当前任务</span><span>${m.current_task||'待分配'}</span></div></div>
+<div class="agent-info"><div class="row"><span class="label">更新时间</span><span>${m.last_updated||'—'}</span></div>
+<div class="row"><span class="label">风险</span><span>${m.risk||'—'}</span></div></div></div></div>`;
+  }
+  return `<div class="agent-card" style="border-left-color:${cls==='green'?'#4caf50':cls==='blue'?'#2196f3':cls==='yellow'?'#ff9800':'#f44336'}">
+${lo}<div class="agent-name">${m.name} ${badge(cls,lbl)}</div><div class="agent-title">${m.title}</div>
+<div class="agent-info"><div class="row"><span class="label">模型</span><span>${m.model}</span></div>
+<div class="row"><span class="label">来源</span><span>${m.source==='local'?'🏠 本地':'☁️ Cloud'}</span></div>
+<div class="row"><span class="label">当前任务</span><span>${m.current_task||'待分配'}</span></div>
+<div class="row"><span class="label">更新</span><span>${m.last_updated||'—'}</span></div></div></div>`;
+}
+
+let captainHtml=captain?makeAgentCard(captain,true):'';
+let crewCards=crew.map(m=>makeAgentCard(m,false)).join('');
+const totalLabel=captain?`· ${members.length}人 (总控+${crew.length}成员)`:`${members.length}人`;
+return `<div class="section"><div class="section-title">🏴 草帽团队 ${totalLabel}</div>${captainHtml}<div class="agent-grid">${crewCards}</div></div>`;}
+
+function renderTasks(){const t=DATA.tasks_today;const ip=t.in_progress||[];const td=t.todo||[];const dn=t.done||[];const an=(t.anomalies||[]);
+let summary=`<div class="chips">
+<div class="chip" style="border-left:3px solid #2196f3"><span class="num">${ip.length}</span>进行中</div>
+<div class="chip" style="border-left:3px solid #ff9800"><span class="num">${td.length}</span>待办</div>
+<div class="chip" style="border-left:3px solid #4caf50"><span class="num">${dn.length}</span>已完成</div>
+${an.length?`<div class="chip" style="border-left:3px solid #f44336"><span class="num">${an.length}</span>异常</div>`:''}</div>`;
+
+function taskRows(arr,prefix){return arr.map(x=>`<div class="task-item"><span class="task-priority ${tag(x.priority||'P2')}">${x.priority||'P2'}</span><span class="task-title">${x.title}${x.needs_network?' 🌐':''}</span>${x.owner?'<span class="task-owner">'+x.owner+'</span>':''}</div>`).join('');}
+
+return `<div class="section"><div class="section-title">📋 今日任务队列</div>
+<div class="card">${summary}${ip.length?'<b style="font-size:12px;color:#86868b">进行中</b>'+taskRows(ip):''}${td.length?'<b style="font-size:12px;color:#86868b">待办</b>'+taskRows(td):''}${dn.length?'<b style="font-size:12px;color:#86868b">已完成</b>'+taskRows(dn):''}
+${an.length?'<div class="warn-box">⚠️ '+an.map(x=>x.message).join('<br>⚠️ ')+'</div>':''}</div></div>`;}
+
+function renderMainStandby(){const m=DATA.main_standby;return `<div class="section"><div class="section-title">🔄 主备状态</div>
+<div class="card"><div class="row"><span class="label">主机 (xiaowuOS)</span><span class="value">${badge(ST[m.xiaowuos_main.status],SL[m.xiaowuos_main.status])}</span></div>
+<div class="row"><span class="label">最近同步</span><span>${m.xiaowuos_main.last_sync||'—'}</span></div>
+<div class="row"><span class="label">备机 (xiaowuOSb)</span><span class="value">${badge(ST[m.xiaowuosb_standby.status]||'yellow',SL[m.xiaowuosb_standby.status]||m.xiaowuosb_standby.status)}</span></div>
+<div class="row"><span class="label">FRP 通道</span><span class="value">${badge(ST[m.frp_channel.status],SL[m.frp_channel.status])} ${m.frp_channel.note||''}</span></div>
+<div class="row"><span class="label">rsync 同步</span><span class="value">${badge(ST[m.rsync_schedule.status],SL[m.rsync_schedule.status])} (${m.rsync_schedule.interval})</span></div>
+<div class="row"><span class="label">Failover 检查</span><span class="value">${badge(ST[m.failover_check.status]||'yellow',SL[m.failover_check.status]||m.failover_check.status)}</span></div></div></div>`;}
+
+function renderModels(){const m=DATA.models;return `<div class="section"><div class="section-title">🧠 模型状态</div>
+<div class="card"><b style="font-size:13px;color:#86868b">本地模型</b><ul class="model-list">${(m.local_models||[]).map(x=>'<li>'+x+'</li>').join('')}</ul>
+<b style="font-size:13px;color:#86868b">Cloud 模型</b><ul class="model-list">${(m.cloud_models||[]).map(x=>'<li>'+x+'</li>').join('')}</ul>
+<div class="warn-box">🔒 ${m.local_only_reminder||'敏感任务一律 Local Only'}</div></div></div>`;}
+
+loadData();
+</script>
+</body>
+</html>

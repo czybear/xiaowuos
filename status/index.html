@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>xiaowuOS V0.1 — 任务看板</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f5f7fa;color:#333;padding:20px}
+h1{text-align:center;margin-bottom:8px;color:#1a1a2e}
+.subtitle{text-align:center;color:#666;font-size:14px;margin-bottom:24px}
+.card{background:#fff;border-radius:12px;padding:18px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.card h3{margin-bottom:6px;font-size:15px}
+.meta{font-size:12px;color:#888;margin-bottom:8px}
+.progress-bar{height:8px;background:#e8ecf0;border-radius:4px;overflow:hidden;margin-top:6px}
+.fill{height:100%;border-radius:4px}
+.s-running .fill{background:#3b82f6}.s-done .fill{background:#10b981}.s-blocked .fill{background:#f59e0b}.s-failed .fill{background:#ef4444}
+.p0{border-left:4px solid #ef4444}.p1{border-left:4px solid #f59e0b}.p2{border-left:4px solid #3b82f6}
+.tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;margin-right:6px;font-weight:600}
+.t-running{background:#dbeafe;color:#2563eb}.t-done{background:#d1fae5;color:#059669}.t-blocked{background:#fef3c7;color:#d97706}.t-failed{background:#fee2e2;color:#dc2626}
+.summary{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.summary-item{text-align:center;flex:1;min-width:80px}
+.summary-num{font-size:24px;font-weight:700}.summary-label{font-size:11px;color:#888}
+.refresh-btn{display:block;margin:0 auto 20px;padding:8px 24px;background:#3b82f6;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px}
+.refresh-btn:hover{background:#2563eb}
+</style>
+</head>
+<body>
+<h1>xiaowuOS V0.1 · 任务看板</h1>
+<p class="subtitle">刷新页面查看最新进度</p>
+<button class="refresh-btn" onclick="loadTasks()">🔄 刷新状态</button>
+<div id="summary" class="summary"></div>
+<div id="tasks"></div>
+<script>
+const statusNames={running:'执行中',done:'已完成',blocked:'阻塞',failed:'失败',queued:'排队',paused:'暂停'};
+function loadTasks(){fetch('tasks.json').then(r=>r.json()).then(render).catch(e=>{document.getElementById('tasks').innerHTML='<p style="color:red;text-align:center">加载失败: '+e+'</p>'});}
+function render(data){
+const c={running:0,done:0,blocked:0,failed:0,queued:0,paused:0};
+data.tasks.forEach(t=>{if(c[t.status]!==undefined)c[t.status]++;t.updated_at=new Date(t.updated_at).toLocaleString('zh-CN',{timeZone:'Asia/Shanghai'})});
+let s='';['running','done','blocked','failed'].forEach(k=>{s+=`<div class="summary-item card"><div class="summary-num" style="color:${k==='done'?'#10b981':k==='running'?'#3b82f6':k==='blocked'?'#f59e0b':'#ef4444'}">${c[k]}</div><div class="summary-label">${statusNames[k]}</div></div>`});
+s+=`<div class="summary-item card"><div class="summary-num" style="font-size:13px">🕐 ${data.tasks.reduce((a,t)=>new Date(t.updated_at)>new Date(a.updated_at)?t:a).updated_at}</div><div class="summary-label">最后更新</div></div>`;
+document.getElementById('summary').innerHTML=s;
+let h='';
+const sorted=[...data.tasks].sort((a,b)=>{const o={running:0,queued:1,paused:2,blocked:3,failed:4,done:5};return(o[a.status]??9)-(o[b.status]??9)});
+sorted.forEach(t=>{
+const pct=Math.min(100,Math.max(0,t.progress));
+h+=`<div class="card s-${t.status} p${['P0','P1','P2'].indexOf((t.priority||'').substring(0,2))>=0?['P0','P1','P2'].indexOf((t.priority||'').substring(0,2)):2+1}">
+<h3>${t.title}</h3>
+<div class="meta">${t.owner||''} · ${t.updated_at} · ETA: ${t.eta?new Date(t.eta).toLocaleString('zh-CN',{timeZone:'Asia/Shanghai'}):'—'}</div>
+<span class="tag t-${t.status}">${statusNames[t.status]||t.status}</span>
+<span style="font-size:12px;color:#666">${pct}% · ${t.current_action||''}</span>
+<div class="progress-bar"><div class="fill" style="width:${pct}%"></div></div>
+</div>`;
+});
+document.getElementById('tasks').innerHTML=h;
+}
+loadTasks();setInterval(loadTasks,30000);
+</script>
+</body>
+</html>

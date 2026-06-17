@@ -18,3 +18,24 @@ macos-openclaw-backup/
 *.bak
 *.bak-*
 xiaowuOS.sh.bak-*
+
+# Local config files
+**/config/private/
+**/model_keys/
+*.env
+*.key
+*token*
+*secret*
+*password*
+.env
+.env.*
+logs/
+backups/
+backup/
+*.tar.gz
+*.zip
+**/dashboard_state*.json
+**/queue/todo/
+**/queue/doing/
+**/queue/failed/
+**/queue/stale_doing/

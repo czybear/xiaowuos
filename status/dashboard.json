@@ -1,0 +1,305 @@
+{
+  "version": "1.0",
+  "generated_at": "2026-06-16T02:30:00+08:00",
+  "system": {
+    "hostname": "xiaowuOSa",
+    "uptime": "6 days, 14 hours, 43 minutes",
+    "disk_free": "总计 1007G / 已用 32G / 可用 925G",
+    "openclaw_version": "OpenClaw 2026.6.6 (8c802aa)",
+    "gateway_status": "running",
+    "gateway_pid": 179169,
+    "dashboard_port": 18790,
+    "frp_dashboard_port": 60030,
+    "dashboard_url": "http://localhost:18790",
+    "anomalies": [
+      {
+        "type": "info",
+        "message": "队列: TODO=11 DOING=3 DONE=11 FAILED=0"
+      }
+    ],
+    "memory": "总计 62Gi / 已用 2.8Gi / 可用 59Gi",
+    "gateway_http": "200",
+    "frpc_status": "active"
+  },
+  "main_standby": {
+    "xiaowuos_main": {
+      "role": "主站",
+      "status": "online",
+      "ip": "127.0.0.1",
+      "last_sync": "2026-06-17T13:42:02+08:00"
+    },
+    "xiaowuosb_standby": {
+      "role": "备机",
+      "status": "pending_config",
+      "ip": "TBD",
+      "last_sync": null,
+      "note": "待部署"
+    },
+    "xiaowuosc_coldbackup": {
+      "role": "冷备快照",
+      "status": "ready",
+      "ip": "TBD",
+      "frp_port": 60026,
+      "ssh": "systemd 自启动",
+      "frpc": "systemd 自启动",
+      "macos_access": "免密已配置",
+      "sync_mode": "不参与准实时同步",
+      "note": "基础环境已完成，待索隆+弗兰奇+甚平规划快照策略"
+    },
+    "frp_channel": {
+      "status": "not_configured",
+      "note": "待配置 FRP 隧道"
+    },
+    "rsync_schedule": {
+      "interval": "5 min",
+      "status": "not_active",
+      "last_ok": null,
+      "note": "待部署 rsync cron"
+    },
+    "failover_check": {
+      "status": "pending",
+      "version": "V0.1 draft only",
+      "note": "初版脚本已写，未上线"
+    }
+  },
+  "team": [
+    {
+      "name": "路飞",
+      "title": "总控 · 船长",
+      "model": "ollama/qwen3.6:27b",
+      "source": "local",
+      "status": "busy",
+      "current_task": "OpenClaw 升级值守 + 明日调度准备",
+      "last_updated": "2026-06-16T02:00:00+08:00",
+      "local_only": true,
+      "risk": "无"
+    },
+    {
+      "name": "索隆",
+      "title": "技术攻坚 · 逻辑推理",
+      "model": "ollama/qwen3.6:27b",
+      "source": "local",
+      "status": "idle",
+      "current_task": "待分配",
+      "last_updated": "2026-06-15T21:00:00+08:00",
+      "local_only": true,
+      "risk": "无"
+    },
+    {
+      "name": "娜美",
+      "title": "内容策划 · 文档整理",
+      "model": "ollama/qwen3.6:27b",
+      "source": "local",
+      "status": "idle",
+      "current_task": "待分配",
+      "last_updated": "2026-06-15T21:00:00+08:00",
+      "local_only": false,
+      "risk": "无"
+    },
+    {
+      "name": "乌索普",
+      "title": "素材搜集 · 网络调研",
+      "model": "ollama/qwen3.6:27b",
+      "source": "local",
+      "status": "idle",
+      "current_task": "待分配",
+      "last_updated": "2026-06-15T21:00:00+08:00",
+      "local_only": false,
+      "risk": "无"
+    },
+    {
+      "name": "山治",
+      "title": "Cloud 协调 · API 对接",
+      "model": "ollama/qwen3.6:27b",
+      "source": "local",
+      "status": "idle",
+      "current_task": "待分配",
+      "last_updated": "2026-06-15T21:00:00+08:00",
+      "local_only": false,
+      "risk": "无"
+    },
+    {
+      "name": "乔巴",
+      "title": "教学辅助 · 课堂支持",
+      "model": "ollama/qwen3.6:27b",
+      "source": "local",
+      "status": "idle",
+      "current_task": "待分配",
+      "last_updated": "2026-06-15T21:00:00+08:00",
+      "local_only": false,
+      "risk": "无"
+    },
+    {
+      "name": "罗宾",
+      "title": "知识管理 · 索引归档",
+      "model": "ollama/qwen3.6:27b",
+      "source": "local",
+      "status": "idle",
+      "current_task": "待分配",
+      "last_updated": "2026-06-15T21:00:00+08:00",
+      "local_only": false,
+      "risk": "无"
+    },
+    {
+      "name": "弗兰奇",
+      "title": "项目管理 · 进度跟踪",
+      "model": "ollama/qwen3.6:27b",
+      "source": "local",
+      "status": "idle",
+      "current_task": "待分配",
+      "last_updated": "2026-06-15T21:00:00+08:00",
+      "local_only": false,
+      "risk": "无"
+    },
+    {
+      "name": "布鲁克",
+      "title": "创意发散 · 方案脑暴",
+      "model": "ollama/qwen3.6:27b",
+      "source": "local",
+      "status": "idle",
+      "current_task": "待分配",
+      "last_updated": "2026-06-15T21:00:00+08:00",
+      "local_only": false,
+      "risk": "无"
+    },
+    {
+      "name": "甚平",
+      "title": "安全审计 · 合规检查",
+      "model": "ollama/qwen3.6:27b",
+      "source": "local",
+      "status": "idle",
+      "current_task": "待分配",
+      "last_updated": "2026-06-15T21:00:00+08:00",
+      "local_only": true,
+      "risk": "无"
+    }
+  ],
+  "tasks_today": {
+    "in_progress": [
+      {
+        "priority": "P0",
+        "title": "任务卡片 — GitHub仓库规划与.gitignore草案"
+      },
+      {
+        "priority": "P2",
+        "title": "任务：布鲁克 - xiaowuOS 系统建设成果复盘"
+      },
+      {
+        "priority": "P2",
+        "title": "P0｜《嗨翻人工智能·信息整理篇》备课 SOP 样板任务"
+      }
+    ],
+    "todo": [
+      {
+        "priority": "P1",
+        "title": "任务卡片 — Agent执行日志与Heartbeat机制设计"
+      },
+      {
+        "priority": "P1",
+        "title": "任务卡片 — xiaowuOS 任务队列机制设计"
+      },
+      {
+        "priority": "P2",
+        "title": "任务卡片 — Ollama Cloud 使用规范"
+      },
+      {
+        "priority": "P1",
+        "title": "Q005 — 任务队列规范审核 + Cloud 使用边界 & 隐私风险检查"
+      },
+      {
+        "priority": "P1",
+        "title": "Q006 — iOS App / 小悟同学 App HealthKit 边界深度调研"
+      },
+      {
+        "priority": "P2",
+        "title": "Q007 — xiaowuOS iOS App V0.1 PoC"
+      },
+      {
+        "priority": "P2",
+        "title": "任务卡片 — Codex 辅助备课试点验证"
+      },
+      {
+        "priority": "P2",
+        "title": "任务卡片 — Gemini CLI 接入验证"
+      },
+      {
+        "priority": "P2",
+        "title": "任务：布鲁克 - xiaowuOS 系统建设成果复盘"
+      },
+      {
+        "priority": "P2",
+        "title": "任务：弗兰奇 - raylib C++ 小游戏技术路径"
+      },
+      {
+        "priority": "P2",
+        "title": "任务：罗宾 - xiaowuOS 待办队列分类"
+      }
+    ],
+    "done": [
+      {
+        "priority": "P0",
+        "title": "任务卡片 — xiaowuOS V0.1 备份架构优化"
+      },
+      {
+        "priority": "P2",
+        "title": "Q001 — 三年级 Scratch 科创启蒙备课 (明晚)"
+      },
+      {
+        "priority": "P2",
+        "title": "Q002 — Raylib + VSCode 技术验证"
+      },
+      {
+        "priority": "P2",
+        "title": "Q003 — xiaowuOS 文档目录规范 & system_audit 索引"
+      },
+      {
+        "priority": "P1",
+        "title": "Q004 — 《极速小车》视觉与玩法草案"
+      },
+      {
+        "priority": "P1",
+        "title": "Q005｜OpenRouter 免费模型接入 PoC"
+      },
+      {
+        "priority": "P1",
+        "title": "Q006｜Dashboard 数据可信性复核"
+      },
+      {
+        "priority": "P0",
+        "title": "Q008 — 大师码张江课时后台数据采集 PoC"
+      },
+      {
+        "priority": "P2",
+        "title": "任务卡片 — 明晚三年级Scratch科创启蒙备课"
+      },
+      {
+        "priority": "P2",
+        "title": "任务卡片 — Codex 接入验证"
+      }
+    ],
+    "anomalies": [],
+    "snapshot_at": "2026-06-17T13:42:02+08:00",
+    "snapshot_note": "数据源: ~/.xiaowuOS/queue (自动同步)",
+    "real_counts": {
+      "todo": 11,
+      "doing": 3,
+      "done": 11,
+      "failed": 0
+    }
+  },
+  "models": {
+    "local_models": [
+      "ollama/qwen3.6:27b (default)",
+      "ollama/qwen3.6:35b",
+      "ollama/qwen3.5:35b",
+      "ollama/qwen3-coder:30b",
+      "ollama/qwen3-vl:8b"
+    ],
+    "cloud_models": [
+      "gpt-4o (pending quota review)",
+      "gpt-oss (configured)"
+    ],
+    "standby_cloud": [],
+    "local_only_reminder": "敏感任务、学生信息、教学原始素材一律 Local Only"
+  }
+}
