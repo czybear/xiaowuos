@@ -22,6 +22,7 @@ struct CourseCenterView: View {
                 VStack(alignment: .leading, spacing: 20) {
                     header
                     teacherChannel
+                    messageEntry
                     discussionBoard
                 }
                 .frame(maxWidth: .infinity, alignment: .topLeading)
@@ -36,6 +37,7 @@ struct CourseCenterView: View {
             VStack(alignment: .leading, spacing: 20) {
                 header
                 teacherChannel
+                messageEntry
                 discussionBoard
                 courseList
                 membershipRules
@@ -55,6 +57,39 @@ struct CourseCenterView: View {
         }
         .padding(16)
         .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 8))
+    }
+
+    private var messageEntry: some View {
+        NavigationLink {
+            ChatCenterView()
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "bubble.left.and.bubble.right.fill")
+                    .font(.title3)
+                    .foregroundStyle(.white)
+                    .frame(width: 42, height: 42)
+                    .background(.orange, in: RoundedRectangle(cornerRadius: 8))
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("即时通讯")
+                        .font(.headline)
+                        .foregroundStyle(.primary)
+                    Text("学员之间、学员和老师之间交流，后续连接 OpenClaw 实时通道。")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+            }
+            .padding(16)
+            .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 8))
+        }
+        .buttonStyle(.plain)
     }
 
     private var teacherChannel: some View {

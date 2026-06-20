@@ -70,4 +70,5 @@ private enum AppTab: Hashable {
         .environmentObject(AccountManager())
         .environmentObject(HealthKitManager())
         .environmentObject(RunSessionManager())
+        .environmentObject(ChatService())
 }

@@ -10,6 +10,8 @@ xiaowuOS 服务端代码统一放在本目录。
 - 从 JSON / CSV / TSV / TXT / 后台 HTML 表格导入学员记录
 - 提供只读课程 API，供 iOS App 后续读取
 - 提供只读学员记录 API，供 iOS App 后续读取
+- 提供即时通讯会话和消息 API
+- 预留 OpenClaw 实时通道连接配置
 - 预留科汛后台课程页抓取入口
 
 ## 快速开始
@@ -40,6 +42,25 @@ GET /api/courses
 GET /api/courses/{id}
 GET /api/student-records
 GET /api/student-records/{id}
+GET /api/chat/conversations
+GET /api/chat/conversations/{id}/messages
+POST /api/chat/conversations/{id}/messages
+```
+
+## 即时通讯
+
+当前即时通讯先使用 SQLite 保存消息，HTTP API 读写。后续接 OpenClaw 时，可以通过环境变量配置服务端地址：
+
+```bash
+OPENCLAW_URL=http://127.0.0.1:9000 python3 app.py
+```
+
+消息发送示例：
+
+```bash
+curl -X POST http://127.0.0.1:8765/api/chat/conversations/teacher-room/messages \
+  -H 'Content-Type: application/json' \
+  -d '{"sender_id":"student-demo","sender_name":"学员","sender_role":"student","body":"老师好"}'
 ```
 
 ## 导入课程

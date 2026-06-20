@@ -21,6 +21,9 @@
 		0A000001000000000000000C /* MemberCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000115 /* MemberCenterView.swift */; };
 		0A000001000000000000000D /* CourseCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000116 /* CourseCenterView.swift */; };
 		0A000001000000000000000E /* MovementCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000117 /* MovementCenterView.swift */; };
+		0A000001000000000000000F /* ChatModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000118 /* ChatModels.swift */; };
+		0A0000010000000000000010 /* ChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000119 /* ChatService.swift */; };
+		0A0000010000000000000011 /* ChatCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A000001000000000000011A /* ChatCenterView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +44,9 @@
 		0A0000010000000000000115 /* MemberCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberCenterView.swift; sourceTree = "<group>"; };
 		0A0000010000000000000116 /* CourseCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseCenterView.swift; sourceTree = "<group>"; };
 		0A0000010000000000000117 /* MovementCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementCenterView.swift; sourceTree = "<group>"; };
+		0A0000010000000000000118 /* ChatModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModels.swift; sourceTree = "<group>"; };
+		0A0000010000000000000119 /* ChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
+		0A000001000000000000011A /* ChatCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCenterView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +87,7 @@
 			children = (
 				0A0000010000000000000105 /* HealthMetric.swift */,
 				0A0000010000000000000113 /* MemberProfile.swift */,
+				0A0000010000000000000118 /* ChatModels.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -92,6 +99,7 @@
 				0A0000010000000000000107 /* RunSessionManager.swift */,
 				0A0000010000000000000108 /* Formatters.swift */,
 				0A0000010000000000000114 /* AccountManager.swift */,
+				0A0000010000000000000119 /* ChatService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -105,6 +113,7 @@
 				0A0000010000000000000115 /* MemberCenterView.swift */,
 				0A0000010000000000000116 /* CourseCenterView.swift */,
 				0A0000010000000000000117 /* MovementCenterView.swift */,
+				0A000001000000000000011A /* ChatCenterView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -200,6 +209,9 @@
 				0A000001000000000000000C /* MemberCenterView.swift in Sources */,
 				0A000001000000000000000D /* CourseCenterView.swift in Sources */,
 				0A000001000000000000000E /* MovementCenterView.swift in Sources */,
+				0A000001000000000000000F /* ChatModels.swift in Sources */,
+				0A0000010000000000000010 /* ChatService.swift in Sources */,
+				0A0000010000000000000011 /* ChatCenterView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

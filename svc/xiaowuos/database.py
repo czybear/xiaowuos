@@ -5,6 +5,7 @@ import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable
+from uuid import uuid4
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -208,3 +209,156 @@ def get_student_record(external_id: str) -> dict | None:
     except json.JSONDecodeError:
         record["raw"] = {}
     return record
+
+
+def seed_default_chat() -> None:
+    now = datetime.now(timezone.utc).isoformat()
+    with connect() as conn:
+        existing = conn.execute("SELECT COUNT(*) FROM chat_conversations").fetchone()[0]
+        if existing:
+            return
+
+        conn.execute(
+            """
+            INSERT INTO chat_conversations (
+                id, title, kind, avatar_text, participants_json, openclaw_channel, created_at, updated_at
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                "teacher-room",
+                "澄木老师答疑群",
+                "group",
+                "澄",
+                json.dumps(
+                    [
+                        {"id": "teacher-chengmu", "name": "澄木老师", "role": "teacher"},
+                        {"id": "student-demo", "name": "学员", "role": "student"},
+                    ],
+                    ensure_ascii=False,
+                ),
+                "openclaw://xiaowuos/teacher-room",
+                now,
+                now,
+            ),
+        )
+        conn.execute(
+            """
+            INSERT INTO chat_messages (
+                id, conversation_id, sender_id, sender_name, sender_role, body, message_type, created_at
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                "welcome-teacher-room",
+                "teacher-room",
+                "teacher-chengmu",
+                "澄木老师",
+                "teacher",
+                "欢迎来到小悟同学，这里会用于课程通知、作业交流和答疑。",
+                "text",
+                now,
+            ),
+        )
+        conn.commit()
+
+
+def list_chat_conversations() -> list[dict]:
+    seed_default_chat()
+    with connect() as conn:
+        rows = conn.execute(
+            """
+            SELECT
+                c.id, c.title, c.kind, c.avatar_text, c.participants_json,
+                c.openclaw_channel, c.updated_at,
+                (
+                    SELECT body FROM chat_messages m
+                    WHERE m.conversation_id = c.id
+                    ORDER BY m.created_at DESC
+                    LIMIT 1
+                ) AS last_message,
+                (
+                    SELECT created_at FROM chat_messages m
+                    WHERE m.conversation_id = c.id
+                    ORDER BY m.created_at DESC
+                    LIMIT 1
+                ) AS last_message_at
+            FROM chat_conversations c
+            ORDER BY COALESCE(last_message_at, c.updated_at) DESC
+            """
+        ).fetchall()
+
+    conversations: list[dict] = []
+    for row in rows:
+        conversation = dict(row)
+        conversation["participants"] = _decode_json_list(conversation.pop("participants_json"))
+        conversations.append(conversation)
+    return conversations
+
+
+def list_chat_messages(conversation_id: str) -> list[dict]:
+    with connect() as conn:
+        rows = conn.execute(
+            """
+            SELECT id, conversation_id, sender_id, sender_name, sender_role,
+                   body, message_type, created_at
+            FROM chat_messages
+            WHERE conversation_id = ?
+            ORDER BY created_at ASC
+            """,
+            (conversation_id,),
+        ).fetchall()
+    return [dict(row) for row in rows]
+
+
+def create_chat_message(conversation_id: str, payload: dict) -> dict:
+    now = datetime.now(timezone.utc).isoformat()
+    message = {
+        "id": str(payload.get("id") or uuid4()),
+        "conversation_id": conversation_id,
+        "sender_id": str(payload.get("sender_id") or "student-demo"),
+        "sender_name": str(payload.get("sender_name") or "学员"),
+        "sender_role": str(payload.get("sender_role") or "student"),
+        "body": str(payload.get("body") or "").strip(),
+        "message_type": str(payload.get("message_type") or "text"),
+        "created_at": now,
+    }
+    if not message["body"]:
+        raise ValueError("message body is required")
+
+    with connect() as conn:
+        conversation = conn.execute(
+            "SELECT id FROM chat_conversations WHERE id = ?",
+            (conversation_id,),
+        ).fetchone()
+        if conversation is None:
+            raise LookupError("conversation not found")
+
+        conn.execute(
+            """
+            INSERT INTO chat_messages (
+                id, conversation_id, sender_id, sender_name, sender_role,
+                body, message_type, created_at
+            )
+            VALUES (
+                :id, :conversation_id, :sender_id, :sender_name, :sender_role,
+                :body, :message_type, :created_at
+            )
+            """,
+            message,
+        )
+        conn.execute(
+            "UPDATE chat_conversations SET updated_at = ? WHERE id = ?",
+            (now, conversation_id),
+        )
+        conn.commit()
+
+    return message
+
+
+def _decode_json_list(text: str) -> list[dict]:
+    try:
+        payload = json.loads(text or "[]")
+    except json.JSONDecodeError:
+        return []
+    return payload if isinstance(payload, list) else []

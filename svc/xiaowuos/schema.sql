@@ -39,3 +39,29 @@ CREATE INDEX IF NOT EXISTS idx_student_records_phone ON student_records(phone);
 CREATE INDEX IF NOT EXISTS idx_student_records_course_title ON student_records(course_title);
 CREATE INDEX IF NOT EXISTS idx_student_records_status ON student_records(status);
 CREATE INDEX IF NOT EXISTS idx_student_records_record_time ON student_records(record_time);
+
+CREATE TABLE IF NOT EXISTS chat_conversations (
+    id TEXT PRIMARY KEY,
+    title TEXT NOT NULL,
+    kind TEXT NOT NULL DEFAULT 'direct',
+    avatar_text TEXT NOT NULL DEFAULT '',
+    participants_json TEXT NOT NULL DEFAULT '[]',
+    openclaw_channel TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS chat_messages (
+    id TEXT PRIMARY KEY,
+    conversation_id TEXT NOT NULL,
+    sender_id TEXT NOT NULL,
+    sender_name TEXT NOT NULL,
+    sender_role TEXT NOT NULL DEFAULT 'student',
+    body TEXT NOT NULL,
+    message_type TEXT NOT NULL DEFAULT 'text',
+    created_at TEXT NOT NULL,
+    FOREIGN KEY(conversation_id) REFERENCES chat_conversations(id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_chat_messages_conversation_id ON chat_messages(conversation_id);
+CREATE INDEX IF NOT EXISTS idx_chat_messages_created_at ON chat_messages(created_at);
