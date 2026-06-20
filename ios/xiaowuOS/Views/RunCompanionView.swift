@@ -14,6 +14,7 @@ struct RunCompanionView: View {
                         supportingMetrics
                     }
                     .padding(20)
+                    .padding(.bottom, 18)
                 }
 
                 controls
@@ -56,25 +57,44 @@ struct RunCompanionView: View {
 
     private var mainConsole: some View {
         VStack(alignment: .leading, spacing: 18) {
-            Text("本次跑步")
+            Text("实时跑步数据")
                 .font(.headline)
 
-            VStack(alignment: .leading, spacing: 8) {
-                Text(runSessionManager.distanceText)
-                    .font(.system(size: 54, weight: .bold, design: .rounded))
-                    .minimumScaleFactor(0.65)
-                    .lineLimit(1)
+            HStack(alignment: .top, spacing: 12) {
+                RunMetricBlock(
+                    title: "心率",
+                    value: runSessionManager.heartRateText,
+                    unit: "次/分",
+                    systemImage: "heart.fill",
+                    color: .red,
+                    message: runSessionManager.healthMessage
+                )
 
-                Text("距离")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                RunMetricBlock(
+                    title: "配速",
+                    value: runSessionManager.paceText,
+                    unit: "",
+                    systemImage: "speedometer",
+                    color: .orange,
+                    message: "实时估算"
+                )
+
+                RunMetricBlock(
+                    title: "步频",
+                    value: runSessionManager.cadenceText,
+                    unit: "步/分",
+                    systemImage: "figure.walk.motion",
+                    color: .blue,
+                    message: runSessionManager.motionMessage
+                )
             }
 
             Divider()
 
-            HStack(spacing: 14) {
+            HStack(spacing: 10) {
+                RunValueTile(title: "距离", value: runSessionManager.distanceText, systemImage: "point.topleft.down.curvedto.point.bottomright.up")
+                RunValueTile(title: runSessionManager.aerobicEffectDetail, value: runSessionManager.aerobicEffectText, systemImage: "lungs.fill")
                 RunValueTile(title: "时间", value: runSessionManager.elapsedText, systemImage: "timer")
-                RunValueTile(title: "配速", value: runSessionManager.paceText, systemImage: "speedometer")
             }
         }
         .padding(18)
@@ -154,6 +174,51 @@ struct RunCompanionView: View {
         if runSessionManager.isPaused { return .gray }
         if runSessionManager.isRunning { return .green }
         return .orange
+    }
+}
+
+private struct RunMetricBlock: View {
+    let title: String
+    let value: String
+    let unit: String
+    let systemImage: String
+    let color: Color
+    let message: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Image(systemName: systemImage)
+                .font(.title3)
+                .foregroundStyle(color)
+
+            VStack(alignment: .leading, spacing: 2) {
+                HStack(alignment: .firstTextBaseline, spacing: 3) {
+                    Text(value)
+                        .font(.title2.weight(.bold))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.55)
+
+                    if !unit.isEmpty {
+                        Text(unit)
+                            .font(.caption2.weight(.medium))
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                    }
+                }
+
+                Text(title)
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(.primary)
+            }
+
+            Text(message)
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+                .lineLimit(2)
+                .minimumScaleFactor(0.8)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 

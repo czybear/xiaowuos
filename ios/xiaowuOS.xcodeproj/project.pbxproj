@@ -16,6 +16,11 @@
 		0A0000010000000000000007 /* RunSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000107 /* RunSessionManager.swift */; };
 		0A0000010000000000000008 /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000108 /* Formatters.swift */; };
 		0A0000010000000000000009 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000109 /* Assets.xcassets */; };
+		0A000001000000000000000A /* MemberProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000113 /* MemberProfile.swift */; };
+		0A000001000000000000000B /* AccountManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000114 /* AccountManager.swift */; };
+		0A000001000000000000000C /* MemberCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000115 /* MemberCenterView.swift */; };
+		0A000001000000000000000D /* CourseCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000116 /* CourseCenterView.swift */; };
+		0A000001000000000000000E /* MovementCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000117 /* MovementCenterView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +36,11 @@
 		0A0000010000000000000110 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0A0000010000000000000111 /* xiaowuOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = xiaowuOS.entitlements; sourceTree = "<group>"; };
 		0A0000010000000000000112 /* xiaowuOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xiaowuOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A0000010000000000000113 /* MemberProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberProfile.swift; sourceTree = "<group>"; };
+		0A0000010000000000000114 /* AccountManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountManager.swift; sourceTree = "<group>"; };
+		0A0000010000000000000115 /* MemberCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberCenterView.swift; sourceTree = "<group>"; };
+		0A0000010000000000000116 /* CourseCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseCenterView.swift; sourceTree = "<group>"; };
+		0A0000010000000000000117 /* MovementCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementCenterView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +80,7 @@
 			isa = PBXGroup;
 			children = (
 				0A0000010000000000000105 /* HealthMetric.swift */,
+				0A0000010000000000000113 /* MemberProfile.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -80,6 +91,7 @@
 				0A0000010000000000000106 /* HealthKitManager.swift */,
 				0A0000010000000000000107 /* RunSessionManager.swift */,
 				0A0000010000000000000108 /* Formatters.swift */,
+				0A0000010000000000000114 /* AccountManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -90,6 +102,9 @@
 				0A0000010000000000000102 /* ContentView.swift */,
 				0A0000010000000000000103 /* HealthDashboardView.swift */,
 				0A0000010000000000000104 /* RunCompanionView.swift */,
+				0A0000010000000000000115 /* MemberCenterView.swift */,
+				0A0000010000000000000116 /* CourseCenterView.swift */,
+				0A0000010000000000000117 /* MovementCenterView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -130,7 +145,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1600;
-				LastUpgradeCheck = 1600;
+				LastUpgradeCheck = 2650;
 				TargetAttributes = {
 					0A0000010000000000000401 = {
 						CreatedOnToolsVersion = 16.0;
@@ -139,10 +154,10 @@
 			};
 			buildConfigurationList = 0A0000010000000000000701 /* Build configuration list for PBXProject "xiaowuOS" */;
 			compatibilityVersion = "Xcode 14.0";
-			developmentRegion = zh-Hans;
+			developmentRegion = "zh-Hans";
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				zh-Hans,
+				"zh-Hans",
 				en,
 				Base,
 			);
@@ -180,6 +195,11 @@
 				0A0000010000000000000006 /* HealthKitManager.swift in Sources */,
 				0A0000010000000000000007 /* RunSessionManager.swift in Sources */,
 				0A0000010000000000000008 /* Formatters.swift in Sources */,
+				0A000001000000000000000A /* MemberProfile.swift in Sources */,
+				0A000001000000000000000B /* AccountManager.swift in Sources */,
+				0A000001000000000000000C /* MemberCenterView.swift in Sources */,
+				0A000001000000000000000D /* CourseCenterView.swift in Sources */,
+				0A000001000000000000000E /* MovementCenterView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -190,6 +210,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -215,8 +236,11 @@
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = W2M4H9D84N;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -239,6 +263,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -249,6 +274,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -274,8 +300,11 @@
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = W2M4H9D84N;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -291,6 +320,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
@@ -306,7 +336,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "";
-				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = xiaowuOS/Info.plist;
@@ -318,13 +347,13 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.john.xiaowuOS;
+				PRODUCT_BUNDLE_IDENTIFIER = com.xiaowuos.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -337,7 +366,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "";
-				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = xiaowuOS/Info.plist;
@@ -349,13 +377,13 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.john.xiaowuOS;
+				PRODUCT_BUNDLE_IDENTIFIER = com.xiaowuos.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

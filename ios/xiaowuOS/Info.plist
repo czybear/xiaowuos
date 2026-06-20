@@ -28,11 +28,20 @@
 	<string>小悟同学未来会在你确认后写入跑步记录，帮助你保存运动成果。</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>跑步伴侣需要在跑步时使用定位来计算距离、配速和路线。</string>
+	<key>NSMotionUsageDescription</key>
+	<string>跑步伴侣需要读取运动与步频数据，用来展示实时步频并陪伴跑步。</string>
 	<key>UILaunchScreen</key>
 	<dict/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 </dict>
 </plist>

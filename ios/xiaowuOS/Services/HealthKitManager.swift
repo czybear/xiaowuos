@@ -23,11 +23,7 @@ final class HealthKitManager: ObservableObject {
 
     func requestAuthorizationAndRefresh() {
         #if targetEnvironment(simulator)
-        authorizationMessage = "请在真机连接 Apple 健康"
-        errorMessage = nil
-        todayMetrics = []
-        bodyMetrics = []
-        recentRuns = []
+        loadSimulatorPreview()
         #else
         guard isHealthDataAvailable else {
             authorizationMessage = "这台设备暂不支持健康数据"
@@ -70,11 +66,7 @@ final class HealthKitManager: ObservableObject {
 
     func refreshHealthData() {
         #if targetEnvironment(simulator)
-        authorizationMessage = "请在真机连接 Apple 健康"
-        errorMessage = nil
-        todayMetrics = []
-        bodyMetrics = []
-        recentRuns = []
+        loadSimulatorPreview()
         #else
         guard isHealthDataAvailable else { return }
 
@@ -122,6 +114,36 @@ final class HealthKitManager: ObservableObject {
             }
         }
         #endif
+    }
+
+    private func loadSimulatorPreview() {
+        authorizationMessage = "模拟器预览数据"
+        errorMessage = "真机运行后会读取 Apple 健康中的真实数据。"
+        todayMetrics = [
+            HealthMetric(title: "今日步数", value: "8,426", subtitle: "预览样例", systemImage: "shoeprints.fill"),
+            HealthMetric(title: "步行跑步距离", value: "6.2 公里", subtitle: "预览样例", systemImage: "figure.run"),
+            HealthMetric(title: "活动能量", value: "512 千卡", subtitle: "预览样例", systemImage: "flame.fill")
+        ]
+        bodyMetrics = [
+            HealthMetric(title: "最近心率", value: "132 次/分", subtitle: "预览样例", systemImage: "heart.fill"),
+            HealthMetric(title: "静息心率", value: "58 次/分", subtitle: "预览样例", systemImage: "waveform.path.ecg"),
+            HealthMetric(title: "睡眠", value: "7小时24分", subtitle: "预览样例", systemImage: "bed.double.fill")
+        ]
+        recentRuns = [
+            RunWorkout(
+                date: calendar.date(byAdding: .day, value: -1, to: Date()) ?? Date(),
+                distanceMeters: 5_200,
+                duration: 1_710,
+                activeEnergyKilocalories: 328
+            ),
+            RunWorkout(
+                date: calendar.date(byAdding: .day, value: -4, to: Date()) ?? Date(),
+                distanceMeters: 8_000,
+                duration: 2_880,
+                activeEnergyKilocalories: 534
+            )
+        ]
+        isLoading = false
     }
 
     private func fetchSum(_ identifier: HKQuantityTypeIdentifier, unit: HKUnit, start: Date) async throws -> Double {
