@@ -83,6 +83,61 @@ def upsert_courses(records: Iterable[dict], source: str) -> int:
     return count
 
 
+def upsert_student_records(records: Iterable[dict], source: str) -> int:
+    now = datetime.now(timezone.utc).isoformat()
+    count = 0
+
+    with connect() as conn:
+        for record in records:
+            external_id = str(record.get("external_id") or "").strip()
+            if not external_id:
+                continue
+
+            payload = {
+                "external_id": external_id,
+                "student_name": record.get("student_name", ""),
+                "phone": record.get("phone", ""),
+                "course_title": record.get("course_title", ""),
+                "teacher": record.get("teacher", "澄木老师"),
+                "status": record.get("status", ""),
+                "record_time": record.get("record_time", ""),
+                "remark": record.get("remark", ""),
+                "source": source,
+                "raw_json": json.dumps(record.get("raw", record), ensure_ascii=False),
+                "updated_at": now,
+            }
+
+            conn.execute(
+                """
+                INSERT INTO student_records (
+                    external_id, student_name, phone, course_title, teacher,
+                    status, record_time, remark, source, raw_json, created_at, updated_at
+                )
+                VALUES (
+                    :external_id, :student_name, :phone, :course_title, :teacher,
+                    :status, :record_time, :remark, :source, :raw_json, :updated_at, :updated_at
+                )
+                ON CONFLICT(external_id) DO UPDATE SET
+                    student_name = excluded.student_name,
+                    phone = excluded.phone,
+                    course_title = excluded.course_title,
+                    teacher = excluded.teacher,
+                    status = excluded.status,
+                    record_time = excluded.record_time,
+                    remark = excluded.remark,
+                    source = excluded.source,
+                    raw_json = excluded.raw_json,
+                    updated_at = excluded.updated_at
+                """,
+                payload,
+            )
+            count += 1
+
+        conn.commit()
+
+    return count
+
+
 def list_courses() -> list[dict]:
     with connect() as conn:
         rows = conn.execute(
@@ -117,3 +172,39 @@ def get_course(external_id: str) -> dict | None:
     except json.JSONDecodeError:
         course["raw"] = {}
     return course
+
+
+def list_student_records() -> list[dict]:
+    with connect() as conn:
+        rows = conn.execute(
+            """
+            SELECT external_id, student_name, phone, course_title, teacher,
+                   status, record_time, remark, source, updated_at
+            FROM student_records
+            ORDER BY record_time DESC, updated_at DESC, student_name ASC
+            """
+        ).fetchall()
+    return [dict(row) for row in rows]
+
+
+def get_student_record(external_id: str) -> dict | None:
+    with connect() as conn:
+        row = conn.execute(
+            """
+            SELECT external_id, student_name, phone, course_title, teacher,
+                   status, record_time, remark, source, raw_json, updated_at
+            FROM student_records
+            WHERE external_id = ?
+            """,
+            (external_id,),
+        ).fetchone()
+
+    if row is None:
+        return None
+
+    record = dict(row)
+    try:
+        record["raw"] = json.loads(record.pop("raw_json") or "{}")
+    except json.JSONDecodeError:
+        record["raw"] = {}
+    return record

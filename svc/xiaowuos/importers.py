@@ -19,6 +19,17 @@ FIELD_ALIASES = {
     "status": ["status", "状态", "上架状态", "是否上架"],
 }
 
+STUDENT_RECORD_FIELD_ALIASES = {
+    "external_id": ["id", "编号", "记录id", "记录ID", "ID", "报名ID", "订单ID"],
+    "student_name": ["student_name", "name", "学员", "学员姓名", "学生", "学生姓名", "姓名", "孩子姓名"],
+    "phone": ["phone", "mobile", "手机号", "手机", "联系电话", "家长手机", "家长手机号"],
+    "course_title": ["course", "course_title", "课程", "课程名称", "报名课程", "购买课程"],
+    "teacher": ["teacher", "老师", "讲师", "顾问", "负责老师", "班主任"],
+    "status": ["status", "状态", "学习状态", "报名状态", "支付状态"],
+    "record_time": ["time", "created_at", "record_time", "创建时间", "报名时间", "记录时间", "下单时间", "时间"],
+    "remark": ["remark", "备注", "说明", "跟进记录", "回访记录"],
+}
+
 
 def load_course_records(path: Path) -> list[dict]:
     suffix = path.suffix.lower()
@@ -33,7 +44,31 @@ def load_course_records(path: Path) -> list[dict]:
     raise ValueError(f"Unsupported import file: {path}")
 
 
+def load_student_records(path: Path) -> list[dict]:
+    rows = load_raw_records(path)
+    return [normalize_student_record(row) for row in rows]
+
+
+def load_raw_records(path: Path) -> list[dict]:
+    suffix = path.suffix.lower()
+    if suffix == ".json":
+        return parse_json_raw_records(path.read_text(encoding="utf-8"))
+    if suffix == ".csv":
+        return parse_csv_raw_records(path)
+    if suffix in {".tsv", ".txt"}:
+        return parse_delimited_text_raw_records(path)
+    if suffix in {".html", ".htm"}:
+        parser = TableParser()
+        parser.feed(path.read_text(encoding="utf-8", errors="replace"))
+        return parser.records()
+    raise ValueError(f"Unsupported import file: {path}")
+
+
 def parse_json_records(text: str) -> list[dict]:
+    return [normalize_record(item) for item in parse_json_raw_records(text)]
+
+
+def parse_json_raw_records(text: str) -> list[dict]:
     payload = json.loads(text)
     if isinstance(payload, dict):
         for key in ("items", "data", "list", "rows"):
@@ -42,16 +77,24 @@ def parse_json_records(text: str) -> list[dict]:
                 break
     if not isinstance(payload, list):
         raise ValueError("JSON import expects a list, or an object containing items/data/list/rows.")
-    return [normalize_record(item) for item in payload if isinstance(item, dict)]
+    return [item for item in payload if isinstance(item, dict)]
 
 
 def parse_csv_records(path: Path) -> list[dict]:
+    return [normalize_record(row) for row in parse_csv_raw_records(path)]
+
+
+def parse_csv_raw_records(path: Path) -> list[dict]:
     with path.open("r", encoding="utf-8-sig", newline="") as handle:
         reader = csv.DictReader(handle)
-        return [normalize_record(row) for row in reader]
+        return list(reader)
 
 
 def parse_delimited_text_records(path: Path) -> list[dict]:
+    return [normalize_record(row) for row in parse_delimited_text_raw_records(path)]
+
+
+def parse_delimited_text_raw_records(path: Path) -> list[dict]:
     text = path.read_text(encoding="utf-8-sig", errors="replace")
     lines = [line.strip() for line in text.splitlines() if line.strip()]
     if len(lines) < 2:
@@ -59,7 +102,7 @@ def parse_delimited_text_records(path: Path) -> list[dict]:
 
     delimiter = "\t" if "\t" in lines[0] else ","
     reader = csv.DictReader(lines, delimiter=delimiter)
-    return [normalize_record(row) for row in reader]
+    return list(reader)
 
 
 def parse_html_table_records(text: str) -> list[dict]:
@@ -76,6 +119,30 @@ def normalize_record(raw: dict[str, Any]) -> dict:
 
     if not normalized["external_id"]:
         normalized["external_id"] = normalized["title"]
+
+    if not normalized["teacher"]:
+        normalized["teacher"] = "澄木老师"
+
+    return normalized
+
+
+def normalize_student_record(raw: dict[str, Any]) -> dict:
+    normalized: dict[str, Any] = {"raw": dict(raw)}
+
+    for target, aliases in STUDENT_RECORD_FIELD_ALIASES.items():
+        normalized[target] = first_value(raw, aliases)
+
+    if not normalized["external_id"]:
+        parts = [
+            normalized["student_name"],
+            normalized["phone"],
+            normalized["course_title"],
+            normalized["record_time"],
+        ]
+        normalized["external_id"] = "|".join(part for part in parts if part)
+
+    if not normalized["external_id"]:
+        normalized["external_id"] = json.dumps(raw, ensure_ascii=False, sort_keys=True)
 
     if not normalized["teacher"]:
         normalized["teacher"] = "澄木老师"

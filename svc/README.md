@@ -5,8 +5,11 @@ xiaowuOS 服务端代码统一放在本目录。
 当前能力：
 
 - 使用 SQLite 保存课程数据
+- 使用 SQLite 保存学员记录数据
 - 从 JSON / CSV / 后台 HTML 表格导入课程
+- 从 JSON / CSV / TSV / TXT / 后台 HTML 表格导入学员记录
 - 提供只读课程 API，供 iOS App 后续读取
+- 提供只读学员记录 API，供 iOS App 后续读取
 - 预留科汛后台课程页抓取入口
 
 ## 快速开始
@@ -35,6 +38,8 @@ http://127.0.0.1:8765
 GET /health
 GET /api/courses
 GET /api/courses/{id}
+GET /api/student-records
+GET /api/student-records/{id}
 ```
 
 ## 导入课程
@@ -56,12 +61,26 @@ python3 scripts/import_courses.py /path/to/courses.txt
 python3 scripts/import_courses.py /path/to/kecheng.html
 ```
 
+导入学员记录：
+
+```bash
+python3 scripts/import_student_records.py /path/to/stu_record.csv
+python3 scripts/import_student_records.py /path/to/stu_record.txt
+python3 scripts/import_student_records.py /path/to/stu_record.html
+```
+
 ## 科汛后台
 
 课程后台地址：
 
 ```text
 https://manage.keshij.cn/admin.php/kecheng/index.html
+```
+
+学员记录后台地址：
+
+```text
+https://manage.keshij.cn/admin.php/stu_record/index.html
 ```
 
 该页面当前会跳转登录页。自动导入需要以下任一方式：

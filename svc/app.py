@@ -29,6 +29,11 @@ class XiaowuRequestHandler(BaseHTTPRequestHandler):
             self.send_json({"items": courses, "count": len(courses)})
             return
 
+        if path == "/api/student-records":
+            records = database.list_student_records()
+            self.send_json({"items": records, "count": len(records)})
+            return
+
         if path.startswith("/api/courses/"):
             course_id = unquote(path.removeprefix("/api/courses/"))
             course = database.get_course(course_id)
@@ -36,6 +41,15 @@ class XiaowuRequestHandler(BaseHTTPRequestHandler):
                 self.send_json({"error": "course not found"}, status=404)
                 return
             self.send_json(course)
+            return
+
+        if path.startswith("/api/student-records/"):
+            record_id = unquote(path.removeprefix("/api/student-records/"))
+            record = database.get_student_record(record_id)
+            if record is None:
+                self.send_json({"error": "student record not found"}, status=404)
+                return
+            self.send_json(record)
             return
 
         self.send_json({"error": "not found"}, status=404)
