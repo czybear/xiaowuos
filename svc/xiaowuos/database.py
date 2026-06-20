@@ -362,3 +362,113 @@ def _decode_json_list(text: str) -> list[dict]:
     except json.JSONDecodeError:
         return []
     return payload if isinstance(payload, list) else []
+
+
+def ops_now() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def list_ops_tasks() -> list[dict]:
+    with connect() as conn:
+        rows = conn.execute(
+            """
+            SELECT id, title, command, target_node, status, source, dedupe_key,
+                   created_at, updated_at
+            FROM ops_tasks
+            ORDER BY created_at DESC
+            LIMIT 100
+            """
+        ).fetchall()
+    return [dict(row) for row in rows]
+
+
+def create_ops_task(payload: dict) -> dict:
+    now = ops_now()
+    title = str(payload.get("title") or payload.get("command") or "新任务").strip()
+    command = str(payload.get("command") or "").strip()
+    target_node = str(payload.get("target_node") or "xiaowuOSa").strip()
+    dedupe_key = str(payload.get("dedupe_key") or f"{target_node}:{title}:{command}").strip()
+
+    with connect() as conn:
+        active_duplicate = conn.execute(
+            """
+            SELECT id, title, command, target_node, status, source, dedupe_key,
+                   created_at, updated_at
+            FROM ops_tasks
+            WHERE dedupe_key = ? AND status IN ('queued', 'running')
+            ORDER BY created_at DESC
+            LIMIT 1
+            """,
+            (dedupe_key,),
+        ).fetchone()
+        if active_duplicate is not None:
+            return dict(active_duplicate)
+
+        task = {
+            "id": str(uuid4()),
+            "title": title,
+            "command": command,
+            "target_node": target_node,
+            "status": "queued",
+            "source": str(payload.get("source") or "ios"),
+            "dedupe_key": dedupe_key,
+            "created_at": now,
+            "updated_at": now,
+        }
+        conn.execute(
+            """
+            INSERT INTO ops_tasks (
+                id, title, command, target_node, status, source, dedupe_key,
+                created_at, updated_at
+            )
+            VALUES (
+                :id, :title, :command, :target_node, :status, :source,
+                :dedupe_key, :created_at, :updated_at
+            )
+            """,
+            task,
+        )
+        conn.execute(
+            """
+            INSERT INTO ops_logs (id, task_id, node_id, level, message, created_at)
+            VALUES (?, ?, ?, ?, ?, ?)
+            """,
+            (str(uuid4()), task["id"], target_node, "info", f"任务已入队：{title}", now),
+        )
+        conn.commit()
+    return task
+
+
+def list_ops_logs() -> list[dict]:
+    with connect() as conn:
+        rows = conn.execute(
+            """
+            SELECT id, task_id, node_id, level, message, created_at
+            FROM ops_logs
+            ORDER BY created_at DESC
+            LIMIT 200
+            """
+        ).fetchall()
+    return [dict(row) for row in rows]
+
+
+def record_ops_action(action: str, node_id: str = "xiaowuOSa", level: str = "info") -> dict:
+    now = ops_now()
+    log = {
+        "id": str(uuid4()),
+        "task_id": "",
+        "node_id": node_id,
+        "level": level,
+        "message": action,
+        "created_at": now,
+    }
+    with connect() as conn:
+        conn.execute(
+            """
+            INSERT INTO ops_logs (id, task_id, node_id, level, message, created_at)
+            VALUES (:id, :task_id, :node_id, :level, :message, :created_at)
+            """,
+            log,
+        )
+        conn.commit()
+    return log

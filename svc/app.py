@@ -24,6 +24,11 @@ class XiaowuRequestHandler(BaseHTTPRequestHandler):
             self.send_json({
                 "ok": True,
                 "service": "xiaowuOS svc",
+                "dashboard": {
+                    "ok": True,
+                    "source": "/health",
+                    "note": "统一健康检查接口，避免 dashboard.html/dashboard.json 差异",
+                },
                 "openclaw": {
                     "enabled": bool(os.environ.get("OPENCLAW_URL")),
                     "url": os.environ.get("OPENCLAW_URL", ""),
@@ -44,6 +49,78 @@ class XiaowuRequestHandler(BaseHTTPRequestHandler):
         if path == "/api/chat/conversations":
             conversations = database.list_chat_conversations()
             self.send_json({"items": conversations, "count": len(conversations)})
+            return
+
+        if path == "/api/ops/nodes":
+            self.send_json({
+                "items": [
+                    {
+                        "id": "xiaowuOSa",
+                        "role": "primary",
+                        "status": "online",
+                        "api_url": os.environ.get("XIAOWUOSA_API_URL", "http://johnonlife.com:60030"),
+                        "ollama_url": os.environ.get("XIAOWUOSA_OLLAMA_URL", ""),
+                        "note": "主控节点，负责队列、OpenClaw、dashboard、调度和主要服务",
+                    },
+                    {
+                        "id": "xiaowuOSb",
+                        "role": "backup-worker",
+                        "status": "standby",
+                        "api_url": os.environ.get("XIAOWUOSB_API_URL", ""),
+                        "ollama_url": os.environ.get("XIAOWUOSB_OLLAMA_URL", ""),
+                        "note": "备份/辅助执行节点，与 a 同步",
+                    },
+                    {
+                        "id": "xiaowuOSc",
+                        "role": "external",
+                        "status": "limited",
+                        "api_url": os.environ.get("XIAOWUOSC_API_URL", ""),
+                        "ollama_url": os.environ.get("XIAOWUOSC_OLLAMA_URL", ""),
+                        "note": "外部/云端/补充节点；c 可访问 a/b，a/b 不能稳定访问 c",
+                    },
+                ],
+                "count": 3,
+            })
+            return
+
+        if path == "/api/ops/dashboard":
+            self.send_json({
+                "ok": True,
+                "status": "online",
+                "gateway": os.environ.get("XIAOWUOS_GATEWAY_URL", "http://johnonlife.com:60030"),
+                "health_endpoint": "/health",
+                "loop_guard": "dedupe_key + queued/running 状态防重复入队",
+            })
+            return
+
+        if path == "/api/ops/ollama":
+            self.send_json({
+                "items": [
+                    {
+                        "node_id": "xiaowuOSa",
+                        "status": "configured" if os.environ.get("XIAOWUOSA_OLLAMA_URL") else "missing_config",
+                        "url": os.environ.get("XIAOWUOSA_OLLAMA_URL", ""),
+                        "note": "必须配置 Windows IP，不使用 127.0.0.1 或 localhost",
+                    },
+                    {
+                        "node_id": "xiaowuOSb",
+                        "status": "configured" if os.environ.get("XIAOWUOSB_OLLAMA_URL") else "missing_config",
+                        "url": os.environ.get("XIAOWUOSB_OLLAMA_URL", ""),
+                        "note": "必须配置 Windows IP，不使用 127.0.0.1 或 localhost",
+                    },
+                ],
+                "count": 2,
+            })
+            return
+
+        if path == "/api/ops/tasks":
+            tasks = database.list_ops_tasks()
+            self.send_json({"items": tasks, "count": len(tasks)})
+            return
+
+        if path == "/api/ops/logs":
+            logs = database.list_ops_logs()
+            self.send_json({"items": logs, "count": len(logs)})
             return
 
         if path.startswith("/api/chat/conversations/") and path.endswith("/messages"):
@@ -88,6 +165,30 @@ class XiaowuRequestHandler(BaseHTTPRequestHandler):
                 self.send_json({"error": str(error)}, status=400)
                 return
             self.send_json(message, status=201)
+            return
+
+        if path == "/api/ops/tasks":
+            payload = self.read_json_body()
+            task = database.create_ops_task(payload)
+            self.send_json(task, status=201)
+            return
+
+        if path == "/api/ops/sync":
+            payload = self.read_json_body()
+            node_id = str(payload.get("node_id") or "xiaowuOSb")
+            log = database.record_ops_action(f"手动触发同步：{node_id}", node_id=node_id)
+            self.send_json({"accepted": True, "log": log}, status=202)
+            return
+
+        if path == "/api/ops/restart":
+            payload = self.read_json_body()
+            service = str(payload.get("service") or "dashboard")
+            node_id = str(payload.get("node_id") or "xiaowuOSa")
+            if service not in {"dashboard", "worker"}:
+                self.send_json({"error": "service must be dashboard or worker"}, status=400)
+                return
+            log = database.record_ops_action(f"手动重启请求：{service}", node_id=node_id)
+            self.send_json({"accepted": True, "service": service, "node_id": node_id, "log": log}, status=202)
             return
 
         self.send_json({"error": "not found"}, status=404)

@@ -9,6 +9,7 @@ struct MemberCenterView: View {
                 VStack(alignment: .leading, spacing: 18) {
                     if let member = accountManager.currentMember {
                         profileCard(member)
+                        opsEntry
                         vipGrowthCard(member)
                         membershipCard
                         wechatStatusCard
@@ -47,6 +48,38 @@ struct MemberCenterView: View {
         }
         .padding(16)
         .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 8))
+    }
+
+    private var opsEntry: some View {
+        NavigationLink {
+            OpsDashboardView()
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "server.rack")
+                    .font(.title3)
+                    .foregroundStyle(.white)
+                    .frame(width: 42, height: 42)
+                    .background(.orange, in: RoundedRectangle(cornerRadius: 8))
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("节点控制台")
+                        .font(.headline)
+                        .foregroundStyle(.primary)
+                    Text("查看 a/b/c、dashboard、Ollama、任务队列和日志。")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+            }
+            .padding(16)
+            .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 8))
+        }
+        .buttonStyle(.plain)
     }
 
     private func vipGrowthCard(_ member: MemberProfile) -> some View {

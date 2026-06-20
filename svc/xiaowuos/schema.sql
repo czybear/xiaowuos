@@ -65,3 +65,29 @@ CREATE TABLE IF NOT EXISTS chat_messages (
 
 CREATE INDEX IF NOT EXISTS idx_chat_messages_conversation_id ON chat_messages(conversation_id);
 CREATE INDEX IF NOT EXISTS idx_chat_messages_created_at ON chat_messages(created_at);
+
+CREATE TABLE IF NOT EXISTS ops_tasks (
+    id TEXT PRIMARY KEY,
+    title TEXT NOT NULL,
+    command TEXT NOT NULL DEFAULT '',
+    target_node TEXT NOT NULL DEFAULT 'xiaowuOSa',
+    status TEXT NOT NULL DEFAULT 'queued',
+    source TEXT NOT NULL DEFAULT 'ios',
+    dedupe_key TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS ops_logs (
+    id TEXT PRIMARY KEY,
+    task_id TEXT NOT NULL DEFAULT '',
+    node_id TEXT NOT NULL DEFAULT '',
+    level TEXT NOT NULL DEFAULT 'info',
+    message TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_ops_tasks_status ON ops_tasks(status);
+CREATE INDEX IF NOT EXISTS idx_ops_tasks_created_at ON ops_tasks(created_at);
+CREATE INDEX IF NOT EXISTS idx_ops_logs_created_at ON ops_logs(created_at);
+CREATE INDEX IF NOT EXISTS idx_ops_logs_task_id ON ops_logs(task_id);

@@ -24,6 +24,12 @@
 		0A000001000000000000000F /* ChatModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000118 /* ChatModels.swift */; };
 		0A0000010000000000000010 /* ChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000119 /* ChatService.swift */; };
 		0A0000010000000000000011 /* ChatCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A000001000000000000011A /* ChatCenterView.swift */; };
+		0A0000010000000000000012 /* OpsModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A000001000000000000011B /* OpsModels.swift */; };
+		0A0000010000000000000013 /* NodeConfigStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A000001000000000000011C /* NodeConfigStore.swift */; };
+		0A0000010000000000000014 /* OpsAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A000001000000000000011D /* OpsAPIClient.swift */; };
+		0A0000010000000000000015 /* OpsDashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A000001000000000000011E /* OpsDashboardViewModel.swift */; };
+		0A0000010000000000000016 /* OpsDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A000001000000000000011F /* OpsDashboardView.swift */; };
+		0A0000010000000000000017 /* NodeConfig.json in Resources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000120 /* NodeConfig.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +53,12 @@
 		0A0000010000000000000118 /* ChatModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModels.swift; sourceTree = "<group>"; };
 		0A0000010000000000000119 /* ChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
 		0A000001000000000000011A /* ChatCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCenterView.swift; sourceTree = "<group>"; };
+		0A000001000000000000011B /* OpsModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpsModels.swift; sourceTree = "<group>"; };
+		0A000001000000000000011C /* NodeConfigStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeConfigStore.swift; sourceTree = "<group>"; };
+		0A000001000000000000011D /* OpsAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpsAPIClient.swift; sourceTree = "<group>"; };
+		0A000001000000000000011E /* OpsDashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpsDashboardViewModel.swift; sourceTree = "<group>"; };
+		0A000001000000000000011F /* OpsDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpsDashboardView.swift; sourceTree = "<group>"; };
+		0A0000010000000000000120 /* NodeConfig.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = NodeConfig.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +88,7 @@
 				0A0000010000000000000304 /* Services */,
 				0A0000010000000000000305 /* Views */,
 				0A0000010000000000000109 /* Assets.xcassets */,
+				0A0000010000000000000120 /* NodeConfig.json */,
 				0A0000010000000000000110 /* Info.plist */,
 				0A0000010000000000000111 /* xiaowuOS.entitlements */,
 			);
@@ -88,6 +101,7 @@
 				0A0000010000000000000105 /* HealthMetric.swift */,
 				0A0000010000000000000113 /* MemberProfile.swift */,
 				0A0000010000000000000118 /* ChatModels.swift */,
+				0A000001000000000000011B /* OpsModels.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -100,6 +114,9 @@
 				0A0000010000000000000108 /* Formatters.swift */,
 				0A0000010000000000000114 /* AccountManager.swift */,
 				0A0000010000000000000119 /* ChatService.swift */,
+				0A000001000000000000011C /* NodeConfigStore.swift */,
+				0A000001000000000000011D /* OpsAPIClient.swift */,
+				0A000001000000000000011E /* OpsDashboardViewModel.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -114,6 +131,7 @@
 				0A0000010000000000000116 /* CourseCenterView.swift */,
 				0A0000010000000000000117 /* MovementCenterView.swift */,
 				0A000001000000000000011A /* ChatCenterView.swift */,
+				0A000001000000000000011F /* OpsDashboardView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -186,6 +204,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A0000010000000000000009 /* Assets.xcassets in Resources */,
+				0A0000010000000000000017 /* NodeConfig.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -212,6 +231,11 @@
 				0A000001000000000000000F /* ChatModels.swift in Sources */,
 				0A0000010000000000000010 /* ChatService.swift in Sources */,
 				0A0000010000000000000011 /* ChatCenterView.swift in Sources */,
+				0A0000010000000000000012 /* OpsModels.swift in Sources */,
+				0A0000010000000000000013 /* NodeConfigStore.swift in Sources */,
+				0A0000010000000000000014 /* OpsAPIClient.swift in Sources */,
+				0A0000010000000000000015 /* OpsDashboardViewModel.swift in Sources */,
+				0A0000010000000000000016 /* OpsDashboardView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

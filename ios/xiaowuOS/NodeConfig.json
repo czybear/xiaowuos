@@ -1,0 +1,28 @@
+{
+  "apiGatewayURL": "http://johnonlife.com:60030",
+  "healthEndpoint": "/health",
+  "dashboardEndpoint": "/api/ops/dashboard",
+  "nodes": [
+    {
+      "id": "xiaowuOSa",
+      "role": "primary",
+      "apiURL": "http://johnonlife.com:60030",
+      "ollamaURL": "",
+      "note": "主控节点，负责队列、OpenClaw、dashboard、调度和主要服务。Ollama 必须配置 Windows IP。"
+    },
+    {
+      "id": "xiaowuOSb",
+      "role": "backup-worker",
+      "apiURL": "",
+      "ollamaURL": "",
+      "note": "备份/辅助执行节点，与 a 保持同步，可承担 worker 或 backup 角色。Ollama 必须配置 Windows IP。"
+    },
+    {
+      "id": "xiaowuOSc",
+      "role": "external",
+      "apiURL": "",
+      "ollamaURL": "",
+      "note": "外部/云端/补充节点。c 可访问 a/b，a/b 不能稳定访问 c，不按完全对等 Mesh 设计。"
+    }
+  ]
+}
