@@ -26,6 +26,8 @@ def load_course_records(path: Path) -> list[dict]:
         return parse_json_records(path.read_text(encoding="utf-8"))
     if suffix == ".csv":
         return parse_csv_records(path)
+    if suffix in {".tsv", ".txt"}:
+        return parse_delimited_text_records(path)
     if suffix in {".html", ".htm"}:
         return parse_html_table_records(path.read_text(encoding="utf-8", errors="replace"))
     raise ValueError(f"Unsupported import file: {path}")
@@ -47,6 +49,17 @@ def parse_csv_records(path: Path) -> list[dict]:
     with path.open("r", encoding="utf-8-sig", newline="") as handle:
         reader = csv.DictReader(handle)
         return [normalize_record(row) for row in reader]
+
+
+def parse_delimited_text_records(path: Path) -> list[dict]:
+    text = path.read_text(encoding="utf-8-sig", errors="replace")
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
+    if len(lines) < 2:
+        return []
+
+    delimiter = "\t" if "\t" in lines[0] else ","
+    reader = csv.DictReader(lines, delimiter=delimiter)
+    return [normalize_record(row) for row in reader]
 
 
 def parse_html_table_records(text: str) -> list[dict]:

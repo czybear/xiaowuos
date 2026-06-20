@@ -39,10 +39,12 @@ GET /api/courses/{id}
 
 ## 导入课程
 
-支持三种输入：
+支持多种输入：
 
 - `.json`
 - `.csv`
+- `.tsv`
+- `.txt`，从后台表格复制出来的文本
 - `.html`，从后台复制或另存出的表格页面
 
 示例：
@@ -50,6 +52,7 @@ GET /api/courses/{id}
 ```bash
 python3 scripts/import_courses.py /path/to/courses.json
 python3 scripts/import_courses.py /path/to/courses.csv
+python3 scripts/import_courses.py /path/to/courses.txt
 python3 scripts/import_courses.py /path/to/kecheng.html
 ```
 
@@ -64,6 +67,7 @@ https://manage.keshij.cn/admin.php/kecheng/index.html
 该页面当前会跳转登录页。自动导入需要以下任一方式：
 
 - 后台导出 CSV / Excel / HTML 后交给导入脚本
+- 在后台课程列表全选复制，保存为 `.txt` 后交给导入脚本
 - 提供一个有效后台登录态 Cookie 给 `scripts/fetch_keshij_courses.py`
 - 后续接入正式后台 API
 
