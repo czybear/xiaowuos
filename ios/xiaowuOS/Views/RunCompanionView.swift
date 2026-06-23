@@ -20,7 +20,7 @@ struct RunCompanionView: View {
                 controls
             }
             .background(Color(.systemGroupedBackground))
-            .navigationTitle("跑步伴侣")
+            .navigationTitle("跑步")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {

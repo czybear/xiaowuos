@@ -30,6 +30,14 @@
 		0A0000010000000000000015 /* OpsDashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A000001000000000000011E /* OpsDashboardViewModel.swift */; };
 		0A0000010000000000000016 /* OpsDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A000001000000000000011F /* OpsDashboardView.swift */; };
 		0A0000010000000000000017 /* NodeConfig.json in Resources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000120 /* NodeConfig.json */; };
+		0A0000010000000000000018 /* ExploreCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000121 /* ExploreCenterView.swift */; };
+		0A0000010000000000000019 /* StudentRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000122 /* StudentRecord.swift */; };
+		0A000001000000000000001A /* StudentRecordService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000123 /* StudentRecordService.swift */; };
+		0A000001000000000000001B /* StudentManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000124 /* StudentManagementView.swift */; };
+		0A000001000000000000001C /* JumpRopeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000125 /* JumpRopeView.swift */; };
+		0A000001000000000000001D /* PomodoroTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000126 /* PomodoroTimerView.swift */; };
+		0A000001000000000000001E /* WubuquanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000127 /* WubuquanView.swift */; };
+		0A000001000000000000001F /* RacingGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000128 /* RacingGameView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,6 +67,14 @@
 		0A000001000000000000011E /* OpsDashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpsDashboardViewModel.swift; sourceTree = "<group>"; };
 		0A000001000000000000011F /* OpsDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpsDashboardView.swift; sourceTree = "<group>"; };
 		0A0000010000000000000120 /* NodeConfig.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = NodeConfig.json; sourceTree = "<group>"; };
+		0A0000010000000000000121 /* ExploreCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreCenterView.swift; sourceTree = "<group>"; };
+		0A0000010000000000000122 /* StudentRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentRecord.swift; sourceTree = "<group>"; };
+		0A0000010000000000000123 /* StudentRecordService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentRecordService.swift; sourceTree = "<group>"; };
+		0A0000010000000000000124 /* StudentManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentManagementView.swift; sourceTree = "<group>"; };
+		0A0000010000000000000125 /* JumpRopeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JumpRopeView.swift; sourceTree = "<group>"; };
+		0A0000010000000000000126 /* PomodoroTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerView.swift; sourceTree = "<group>"; };
+		0A0000010000000000000127 /* WubuquanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WubuquanView.swift; sourceTree = "<group>"; };
+		0A0000010000000000000128 /* RacingGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RacingGameView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +116,7 @@
 			children = (
 				0A0000010000000000000105 /* HealthMetric.swift */,
 				0A0000010000000000000113 /* MemberProfile.swift */,
+				0A0000010000000000000122 /* StudentRecord.swift */,
 				0A0000010000000000000118 /* ChatModels.swift */,
 				0A000001000000000000011B /* OpsModels.swift */,
 			);
@@ -117,6 +134,7 @@
 				0A000001000000000000011C /* NodeConfigStore.swift */,
 				0A000001000000000000011D /* OpsAPIClient.swift */,
 				0A000001000000000000011E /* OpsDashboardViewModel.swift */,
+				0A0000010000000000000123 /* StudentRecordService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -129,7 +147,13 @@
 				0A0000010000000000000104 /* RunCompanionView.swift */,
 				0A0000010000000000000115 /* MemberCenterView.swift */,
 				0A0000010000000000000116 /* CourseCenterView.swift */,
+				0A0000010000000000000126 /* PomodoroTimerView.swift */,
 				0A0000010000000000000117 /* MovementCenterView.swift */,
+				0A0000010000000000000125 /* JumpRopeView.swift */,
+				0A0000010000000000000127 /* WubuquanView.swift */,
+				0A0000010000000000000121 /* ExploreCenterView.swift */,
+				0A0000010000000000000128 /* RacingGameView.swift */,
+				0A0000010000000000000124 /* StudentManagementView.swift */,
 				0A000001000000000000011A /* ChatCenterView.swift */,
 				0A000001000000000000011F /* OpsDashboardView.swift */,
 			);
@@ -236,6 +260,14 @@
 				0A0000010000000000000014 /* OpsAPIClient.swift in Sources */,
 				0A0000010000000000000015 /* OpsDashboardViewModel.swift in Sources */,
 				0A0000010000000000000016 /* OpsDashboardView.swift in Sources */,
+				0A0000010000000000000018 /* ExploreCenterView.swift in Sources */,
+				0A0000010000000000000019 /* StudentRecord.swift in Sources */,
+				0A000001000000000000001A /* StudentRecordService.swift in Sources */,
+				0A000001000000000000001B /* StudentManagementView.swift in Sources */,
+				0A000001000000000000001C /* JumpRopeView.swift in Sources */,
+				0A000001000000000000001D /* PomodoroTimerView.swift in Sources */,
+				0A000001000000000000001E /* WubuquanView.swift in Sources */,
+				0A000001000000000000001F /* RacingGameView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -6,14 +6,14 @@ struct HealthDashboardView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(alignment: .leading, spacing: 22) {
-                    header
+                VStack(alignment: .leading, spacing: 20) {
+                    Text("心力、脑力、体力的平衡")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+
                     balanceSection
-
-                    MetricSection(title: "今天", metrics: healthKitManager.todayMetrics)
-                    MetricSection(title: "身体状态", metrics: healthKitManager.bodyMetrics)
-
-                    recentRuns
+                    todaySummary
+                    healthActions
                 }
                 .padding(20)
             }
@@ -37,107 +37,97 @@ struct HealthDashboardView: View {
         }
     }
 
-    private var header: some View {
+    private var balanceSection: some View {
         VStack(alignment: .leading, spacing: 14) {
-            HStack(spacing: 12) {
-                Image(systemName: "heart.text.square.fill")
-                    .font(.title2)
-                    .foregroundStyle(.white)
-                    .frame(width: 44, height: 44)
-                    .background(.orange, in: RoundedRectangle(cornerRadius: 8))
+            Text("今日平衡")
+                .font(.headline)
 
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("xiaowuOS")
-                        .font(.headline)
-                    Text("心力、脑力、体力平衡观察")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-
-                Spacer()
-
-                if healthKitManager.isLoading {
-                    ProgressView()
-                }
-            }
-
-            Text("当前算法为体验模型，后续会结合健康数据、学习状态和运动记录继续调整。")
-                .font(.footnote)
+            Text("AI 暂按健康数据做基础估算")
+                .font(.subheadline)
                 .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
 
             if let errorMessage = healthKitManager.errorMessage {
                 Text(errorMessage)
                     .font(.footnote)
                     .foregroundStyle(.red)
             }
+
+            HStack(spacing: 18) {
+                BalanceScore(title: "心力", score: 72, color: .green)
+                BalanceScore(title: "脑力", score: 68, color: .blue)
+                BalanceScore(title: "体力", score: 81, color: .orange)
+            }
+
+            if healthKitManager.isLoading {
+                ProgressView()
+            }
         }
         .padding(16)
         .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 8))
     }
 
-    private var balanceSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("AI 平衡")
-                .font(.headline)
-
-            HStack(alignment: .top, spacing: 12) {
-                BalanceCard(title: "心力", score: 72, status: "稳定", systemImage: "heart.fill", color: .red)
-                BalanceCard(title: "脑力", score: 68, status: "可提升", systemImage: "brain.head.profile", color: .purple)
-                BalanceCard(title: "体力", score: 81, status: "较好", systemImage: "bolt.fill", color: .green)
-            }
-
-            Text("建议：今天保持轻中强度运动，学习任务拆成 25 分钟一段，晚上留出恢复时间。")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
-                .padding(14)
-                .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 8))
+    private var todaySummary: some View {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 96), spacing: 12)], spacing: 12) {
+            HealthSummaryTile(title: "心率", value: bodyMetricValue(containing: "心率", fallback: "--"), color: .red)
+            HealthSummaryTile(title: "步数", value: todayMetricValue(containing: "步数", fallback: "--"), color: .blue)
+            HealthSummaryTile(title: "睡眠", value: bodyMetricValue(containing: "睡眠", fallback: "--"), color: .orange)
         }
     }
 
-    private var recentRuns: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("最近跑步")
-                .font(.headline)
-
-            if healthKitManager.recentRuns.isEmpty {
-                EmptyStateView(title: "还没有读取到跑步记录", systemImage: "figure.run")
-            } else {
-                VStack(spacing: 10) {
-                    ForEach(healthKitManager.recentRuns) { run in
-                        RunHistoryRow(run: run)
-                    }
-                }
-            }
+    private var healthActions: some View {
+        VStack(spacing: 14) {
+            HealthActionRow(symbol: "heart.fill", title: "健康数据授权", subtitle: "连接 iOS 健康数据", tint: .green)
+            HealthActionRow(symbol: "waveform.path.ecg", title: "趋势记录", subtitle: "查看最近 7 天状态", tint: .blue)
+            HealthActionRow(symbol: "sparkles", title: "AI 建议", subtitle: "先给出轻量提示", tint: .purple)
         }
+    }
+
+    private func todayMetricValue(containing keyword: String, fallback: String) -> String {
+        healthKitManager.todayMetrics.first { $0.title.contains(keyword) }?.value ?? fallback
+    }
+
+    private func bodyMetricValue(containing keyword: String, fallback: String) -> String {
+        healthKitManager.bodyMetrics.first { $0.title.contains(keyword) }?.value ?? fallback
     }
 }
 
-private struct BalanceCard: View {
+private struct BalanceScore: View {
     let title: String
     let score: Int
-    let status: String
-    let systemImage: String
+    let color: Color
+
+    var body: some View {
+        VStack(spacing: 4) {
+            Text("\(score)")
+                .font(.largeTitle.weight(.bold))
+                .foregroundStyle(color)
+
+            Text(title)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity)
+    }
+}
+
+private struct HealthSummaryTile: View {
+    let title: String
+    let value: String
     let color: Color
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Image(systemName: systemImage)
-                .font(.title3)
-                .foregroundStyle(color)
-
-            Text("\(score)")
-                .font(.title2.weight(.bold))
-                .lineLimit(1)
-                .minimumScaleFactor(0.75)
-
             Text(title)
-                .font(.subheadline.weight(.semibold))
-
-            Text(status)
                 .font(.caption)
                 .foregroundStyle(.secondary)
+
+            Text(value)
+                .font(.title3.weight(.semibold))
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+
+            ProgressView(value: 0.68)
+                .tint(color)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(14)
@@ -145,103 +135,32 @@ private struct BalanceCard: View {
     }
 }
 
-private struct MetricSection: View {
+private struct HealthActionRow: View {
+    let symbol: String
     let title: String
-    let metrics: [HealthMetric]
+    let subtitle: String
+    let tint: Color
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(title)
-                .font(.headline)
-
-            if metrics.isEmpty {
-                EmptyStateView(title: "等待健康数据", systemImage: "heart")
-            } else {
-                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                    ForEach(metrics) { metric in
-                        MetricCard(metric: metric)
-                    }
-                }
-            }
-        }
-    }
-}
-
-private struct MetricCard: View {
-    let metric: HealthMetric
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Image(systemName: metric.systemImage)
-                .font(.title3)
-                .foregroundStyle(.orange)
+        HStack(spacing: 14) {
+            Image(systemName: symbol)
+                .font(.body.weight(.semibold))
+                .foregroundStyle(tint)
+                .frame(width: 34, height: 34)
+                .background(tint.opacity(0.12), in: RoundedRectangle(cornerRadius: 8))
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(metric.value)
-                    .font(.title3.weight(.semibold))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.75)
+                Text(title)
+                    .font(.headline)
 
-                Text(metric.title)
+                Text(subtitle)
                     .font(.subheadline)
-                    .foregroundStyle(.primary)
-
-                Text(metric.subtitle)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(14)
-        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 8))
-    }
-}
-
-private struct RunHistoryRow: View {
-    let run: RunWorkout
-
-    var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: "figure.run")
-                .font(.title3)
-                .foregroundStyle(.white)
-                .frame(width: 40, height: 40)
-                .background(.blue, in: RoundedRectangle(cornerRadius: 8))
-
-            VStack(alignment: .leading, spacing: 4) {
-                Text(Formatters.shortDate(run.date))
-                    .font(.subheadline.weight(.semibold))
-                Text("\(Formatters.distance(run.distanceMeters)) · \(Formatters.stopwatch(run.duration))")
-                    .font(.caption)
                     .foregroundStyle(.secondary)
             }
 
             Spacer()
-
-            Text(run.paceSecondsPerKilometer.map(Formatters.pace) ?? "--")
-                .font(.caption.weight(.medium))
-                .foregroundStyle(.secondary)
         }
-        .padding(12)
-        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 8))
-    }
-}
-
-private struct EmptyStateView: View {
-    let title: String
-    let systemImage: String
-
-    var body: some View {
-        HStack(spacing: 10) {
-            Image(systemName: systemImage)
-                .foregroundStyle(.secondary)
-            Text(title)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-            Spacer()
-        }
-        .padding(14)
+        .padding(16)
         .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 8))
     }
 }

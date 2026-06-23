@@ -12,6 +12,8 @@ struct ContentView: View {
             .mine
         } else if arguments.contains("-showCourseTab") {
             .learning
+        } else if arguments.contains("-showExploreTab") {
+            .explore
         } else {
             .health
         }
@@ -33,25 +35,31 @@ struct ContentView: View {
         TabView(selection: $selectedTab) {
             HealthDashboardView()
                 .tabItem {
-                    Label("健康", systemImage: "heart.text.square.fill")
+                    Label("健康", systemImage: "heart.fill")
                 }
                 .tag(AppTab.health)
 
-            CourseCenterView()
-                .tabItem {
-                    Label("学习", systemImage: "graduationcap.fill")
-                }
-                .tag(AppTab.learning)
-
             MovementCenterView()
                 .tabItem {
-                    Label("运动", systemImage: "figure.run.circle.fill")
+                    Label("运动", systemImage: "arrow.up.right")
                 }
                 .tag(AppTab.movement)
 
+            CourseCenterView()
+                .tabItem {
+                    Label("学习", systemImage: "book.fill")
+                }
+                .tag(AppTab.learning)
+
+            ExploreCenterView()
+                .tabItem {
+                    Label("探索", systemImage: "sparkles")
+                }
+                .tag(AppTab.explore)
+
             MemberCenterView()
                 .tabItem {
-                    Label("我的", systemImage: "person.crop.circle.fill")
+                    Label("我的", systemImage: "person.fill")
                 }
                 .tag(AppTab.mine)
         }
@@ -62,6 +70,7 @@ private enum AppTab: Hashable {
     case health
     case learning
     case movement
+    case explore
     case mine
 }
 
