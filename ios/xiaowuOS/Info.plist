@@ -22,6 +22,19 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>johnonlife.com</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
 	<key>NSHealthShareUsageDescription</key>
 	<string>小悟同学需要读取你的步数、跑步、心率、睡眠等健康数据，用来展示健康状态并陪伴跑步。</string>
 	<key>NSHealthUpdateUsageDescription</key>

@@ -22,7 +22,11 @@ struct ContentView: View {
 
     var body: some View {
         Group {
-            if accountManager.isSignedIn {
+            if ProcessInfo.processInfo.arguments.contains("-showRacingGame") {
+                NavigationStack {
+                    RacingGameView()
+                }
+            } else if accountManager.isSignedIn {
                 signedInTabs
             } else {
                 MemberCenterView()

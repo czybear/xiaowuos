@@ -6,7 +6,12 @@ struct ExploreCenterView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     header
-                    assistantCard
+                    NavigationLink {
+                        OpenClawBridgeView()
+                    } label: {
+                        assistantCard
+                    }
+                    .buttonStyle(.plain)
                     actionList
                 }
                 .padding(20)
@@ -31,7 +36,7 @@ struct ExploreCenterView: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
 
-            Text("开始探索")
+            Text("联接小悟")
                 .font(.subheadline.weight(.medium))
                 .foregroundStyle(.purple)
                 .padding(.top, 8)
@@ -47,6 +52,13 @@ struct ExploreCenterView: View {
                 RacingGameView()
             } label: {
                 ExploreRow(symbol: "car.fill", title: "赛车", subtitle: "三车道躲避与收集小游戏", tint: .orange)
+            }
+            .buttonStyle(.plain)
+
+            NavigationLink {
+                WeChatDigestView()
+            } label: {
+                ExploreRow(symbol: "text.bubble.fill", title: "微信精华", subtitle: "粘贴消息，提炼重点与待办", tint: .green)
             }
             .buttonStyle(.plain)
 

@@ -1,4 +1,6 @@
 data/*.sqlite3
 data/*.sqlite3-*
+data/gesp_trial_users.json
+data/wechat-capture*.json
 __pycache__/
 *.pyc

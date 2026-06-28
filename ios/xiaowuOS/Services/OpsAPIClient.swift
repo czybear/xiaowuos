@@ -43,6 +43,15 @@ final class OpsAPIClient {
         ])
     }
 
+    func sendOpenClawMessage(message: String, targetNode: String, channel: String) async throws -> OpenClawMessageResponse {
+        try await post("/api/openclaw/messages", payload: [
+            "message": message,
+            "target_node": targetNode,
+            "channel": channel,
+            "source": "xiaowuOS-app"
+        ])
+    }
+
     func triggerSync(nodeId: String) async throws {
         let _: ActionResponse = try await post("/api/ops/sync", payload: ["node_id": nodeId])
     }

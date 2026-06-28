@@ -38,6 +38,8 @@
 		0A000001000000000000001D /* PomodoroTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000126 /* PomodoroTimerView.swift */; };
 		0A000001000000000000001E /* WubuquanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000127 /* WubuquanView.swift */; };
 		0A000001000000000000001F /* RacingGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000128 /* RacingGameView.swift */; };
+		0A0000010000000000000020 /* OpenClawBridgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000010000000000000129 /* OpenClawBridgeView.swift */; };
+		0A0000010000000000000021 /* WeChatDigestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A000001000000000000012A /* WeChatDigestView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -75,6 +77,8 @@
 		0A0000010000000000000126 /* PomodoroTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerView.swift; sourceTree = "<group>"; };
 		0A0000010000000000000127 /* WubuquanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WubuquanView.swift; sourceTree = "<group>"; };
 		0A0000010000000000000128 /* RacingGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RacingGameView.swift; sourceTree = "<group>"; };
+		0A0000010000000000000129 /* OpenClawBridgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenClawBridgeView.swift; sourceTree = "<group>"; };
+		0A000001000000000000012A /* WeChatDigestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeChatDigestView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,7 +156,9 @@
 				0A0000010000000000000125 /* JumpRopeView.swift */,
 				0A0000010000000000000127 /* WubuquanView.swift */,
 				0A0000010000000000000121 /* ExploreCenterView.swift */,
+				0A000001000000000000012A /* WeChatDigestView.swift */,
 				0A0000010000000000000128 /* RacingGameView.swift */,
+				0A0000010000000000000129 /* OpenClawBridgeView.swift */,
 				0A0000010000000000000124 /* StudentManagementView.swift */,
 				0A000001000000000000011A /* ChatCenterView.swift */,
 				0A000001000000000000011F /* OpsDashboardView.swift */,
@@ -268,6 +274,8 @@
 				0A000001000000000000001D /* PomodoroTimerView.swift in Sources */,
 				0A000001000000000000001E /* WubuquanView.swift in Sources */,
 				0A000001000000000000001F /* RacingGameView.swift in Sources */,
+				0A0000010000000000000020 /* OpenClawBridgeView.swift in Sources */,
+				0A0000010000000000000021 /* WeChatDigestView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

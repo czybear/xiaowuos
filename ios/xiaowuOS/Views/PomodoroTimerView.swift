@@ -1,29 +1,25 @@
 import AVFoundation
 import AudioToolbox
 import SwiftUI
+import UIKit
 
 struct PomodoroTimerView: View {
+    @Environment(\.scenePhase) private var scenePhase
     @StateObject private var timer = PomodoroTimer()
     @StateObject private var soundPlayer = FocusSoundPlayer()
-    @State private var focusTask = ""
+    @AppStorage("pomodoro.focusTask") private var focusTask = ""
 
     var body: some View {
         VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    statusCard
-                    taskCard
-                    timerCard
-                    modeCard
-                    soundCard
-                    reviewCard
-                    tipsCard
-                }
-                .padding(20)
-                .padding(.bottom, 18)
+            VStack(alignment: .leading, spacing: 14) {
+                timerCard
+                taskCard
+                controls
+                soundCard
             }
+            .padding(20)
 
-            controls
+            Spacer(minLength: 0)
         }
         .background(Color(.systemGroupedBackground))
         .navigationTitle("番茄钟")
@@ -31,48 +27,65 @@ struct PomodoroTimerView: View {
             timer.onRoundFinished = {
                 soundPlayer.playCompletionBell()
             }
+            UIApplication.shared.isIdleTimerDisabled = timer.isRunning
         }
         .onDisappear {
-            timer.pause()
-            soundPlayer.stopNoise()
+            pauseSession()
+        }
+        .onChange(of: timer.isRunning) { _, isRunning in
+            UIApplication.shared.isIdleTimerDisabled = isRunning
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase != .active {
+                pauseSession()
+            }
         }
     }
 
-    private var statusCard: some View {
-        HStack(spacing: 12) {
-            Image(systemName: timer.mode.systemImage)
-                .font(.title3)
-                .foregroundStyle(timer.mode.tint)
-                .frame(width: 42, height: 42)
-                .background(timer.mode.tint.opacity(0.12), in: RoundedRectangle(cornerRadius: 8))
-
-            VStack(alignment: .leading, spacing: 4) {
-                Text(timer.statusTitle)
-                    .font(.headline)
-
-                Text(timer.mode.subtitle)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
-
-            Spacer()
-        }
-        .padding(16)
-        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 8))
+    private func pauseSession() {
+        timer.pause()
+        soundPlayer.stopNoise()
+        UIApplication.shared.isIdleTimerDisabled = false
     }
 
     private var taskCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("当前任务")
-                .font(.headline)
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Text("当前任务")
+                    .font(.headline)
+                Spacer()
+                Text(timer.isRunning ? "专注中" : "准备中")
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(timer.isRunning ? timer.mode.tint : .secondary)
+            }
 
             TextField("这一个番茄钟只做一件事", text: $focusTask, axis: .vertical)
-                .lineLimit(2, reservesSpace: true)
+                .lineLimit(1)
                 .textFieldStyle(.plain)
-                .padding(14)
+                .font(.subheadline)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 11)
                 .background(Color(.tertiarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 8))
+                .disabled(timer.isRunning)
 
-            Text("参考番茄钟任务清单的思路：先定任务，再开始计时。")
+            HStack(spacing: 8) {
+                ForEach(FocusTaskPreset.allCases) { preset in
+                    Button {
+                        focusTask = preset.title
+                    } label: {
+                        Text(preset.title)
+                            .font(.caption.weight(.medium))
+                            .lineLimit(1)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 7)
+                            .background(Color(.tertiarySystemGroupedBackground), in: Capsule())
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(timer.isRunning)
+                }
+            }
+
+            Text(timer.isRunning ? "屏幕保持常亮。离开页面或切到后台会暂停。" : "先定任务，再开始。")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
         }
@@ -81,40 +94,44 @@ struct PomodoroTimerView: View {
     }
 
     private var timerCard: some View {
-        VStack(alignment: .leading, spacing: 18) {
-            HStack(alignment: .firstTextBaseline) {
-                Text(timer.remainingText)
-                    .font(.system(size: 64, weight: .bold, design: .rounded))
-                    .monospacedDigit()
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
+        VStack(alignment: .leading, spacing: 16) {
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(timer.statusTitle)
+                        .font(.headline)
+
+                    Text(timer.mode.subtitle)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
 
                 Spacer()
 
-                VStack(alignment: .trailing, spacing: 4) {
-                    Text("今日")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Text("\(timer.completedFocusCount) 次")
-                        .font(.title3.weight(.semibold))
-                }
+                Text("今日 \(timer.completedFocusCount)")
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(.secondary)
+                    .monospacedDigit()
             }
 
-            ProgressView(value: timer.progress)
-                .tint(timer.mode.tint)
+            Text(timer.remainingText)
+                .font(.system(size: 76, weight: .bold, design: .rounded))
+                .monospacedDigit()
+                .lineLimit(1)
+                .minimumScaleFactor(0.65)
+                .frame(maxWidth: .infinity, alignment: .center)
 
-            Text(timer.progressHint)
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-        }
-        .padding(18)
-        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 8))
-    }
+            VStack(alignment: .leading, spacing: 10) {
+                ProgressView(value: timer.progress)
+                    .tint(timer.mode.tint)
 
-    private var modeCard: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            Text("模式")
-                .font(.headline)
+                HStack {
+                    Label(timer.nextStepText, systemImage: "arrow.right.circle.fill")
+                        .font(.caption.weight(.medium))
+                        .foregroundStyle(timer.mode.tint)
+
+                    Spacer()
+                }
+            }
 
             Picker("模式", selection: $timer.mode) {
                 ForEach(PomodoroMode.allCases) { mode in
@@ -123,19 +140,13 @@ struct PomodoroTimerView: View {
             }
             .pickerStyle(.segmented)
             .disabled(timer.isRunning)
-
-            HStack(spacing: 10) {
-                PomodoroMetric(title: "专注", value: "25 分钟")
-                PomodoroMetric(title: "短休息", value: "5 分钟")
-                PomodoroMetric(title: "长休息", value: "15 分钟")
-            }
         }
-        .padding(16)
+        .padding(18)
         .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 8))
     }
 
     private var soundCard: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .firstTextBaseline) {
                 Text("专注音景")
                     .font(.headline)
@@ -153,67 +164,38 @@ struct PomodoroTimerView: View {
             ))
             .font(.subheadline)
 
-            Picker("声音", selection: Binding(
-                get: { soundPlayer.scene },
-                set: { soundPlayer.selectScene($0) }
-            )) {
-                ForEach(FocusSoundScene.allCases) { scene in
-                    Text(scene.title).tag(scene)
+            if soundPlayer.isNoiseEnabled {
+                Picker("声音", selection: Binding(
+                    get: { soundPlayer.scene },
+                    set: { soundPlayer.selectScene($0) }
+                )) {
+                    ForEach(FocusSoundScene.allCases) { scene in
+                        Text(scene.title).tag(scene)
+                    }
+                }
+                .pickerStyle(.segmented)
+
+                HStack(spacing: 10) {
+                    Image(systemName: "speaker.wave.1.fill")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+
+                    Slider(
+                        value: Binding(
+                            get: { soundPlayer.volume },
+                            set: { soundPlayer.setVolume($0) }
+                        ),
+                        in: 0.05...0.45
+                    )
                 }
             }
-            .pickerStyle(.segmented)
-            .disabled(soundPlayer.isNoiseEnabled == false)
 
-            VStack(alignment: .leading, spacing: 8) {
-                Text("音量")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-
-                Slider(
-                    value: Binding(
-                        get: { soundPlayer.volume },
-                        set: { soundPlayer.setVolume($0) }
-                    ),
-                    in: 0.05...0.45
-                )
-                .disabled(soundPlayer.isNoiseEnabled == false)
-            }
-
-            Text("到时间后会自动响一声提醒。")
+            Text("静音模式下也会播放，由系统媒体音量和下方音量控制。")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
         }
         .padding(16)
         .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 8))
-    }
-
-    private var reviewCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("今日回顾")
-                .font(.headline)
-
-            HStack(spacing: 10) {
-                PomodoroMetric(title: "完成", value: "\(timer.completedFocusCount) 个")
-                PomodoroMetric(title: "专注时长", value: "\(timer.completedFocusCount * 25) 分钟")
-                PomodoroMetric(title: "节奏", value: "25 / 5")
-            }
-
-            Text(timer.completedFocusCount == 0 ? "先完成一个番茄钟，今天的专注记录就开始了。" : "已经完成 \(timer.completedFocusCount) 个番茄钟，继续保持。")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-        }
-        .padding(16)
-        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 8))
-    }
-
-    private var tipsCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("专注提示")
-                .font(.headline)
-
-            PomodoroTip(title: "只做一件事", text: "开始后先把这 25 分钟留给一个明确任务。")
-            PomodoroTip(title: "休息要真的休息", text: "短休息时离开屏幕，喝水或伸展一下。")
-        }
     }
 
     private var controls: some View {
@@ -229,6 +211,9 @@ struct PomodoroTimerView: View {
                 .controlSize(.large)
             } else {
                 Button {
+                    if focusTask.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        focusTask = "专注学习"
+                    }
                     timer.start()
                 } label: {
                     Label(timer.remainingSeconds == timer.mode.duration ? "开始" : "继续", systemImage: "play.fill")
@@ -256,8 +241,25 @@ struct PomodoroTimerView: View {
             .buttonStyle(.bordered)
             .controlSize(.large)
         }
-        .padding(16)
-        .background(.regularMaterial)
+    }
+}
+
+private enum FocusTaskPreset: String, CaseIterable, Identifiable {
+    case courseReview
+    case homework
+    case making
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .courseReview:
+            "复习课程"
+        case .homework:
+            "完成作业"
+        case .making:
+            "作品搭建"
+        }
     }
 }
 
@@ -366,6 +368,13 @@ private final class PomodoroTimer: ObservableObject {
             return "完成一次专注后，会计入今日番茄次数。"
         }
         return "休息结束后，可以回到专注模式。"
+    }
+
+    var nextStepText: String {
+        if mode == .focus {
+            return (completedFocusCount + 1) % 4 == 0 ? "完成后休息 15 分钟" : "完成后休息 5 分钟"
+        }
+        return "休息后回到专注"
     }
 
     func start() {
@@ -482,7 +491,7 @@ private final class FocusSoundPlayer: ObservableObject {
         engine.mainMixerNode.outputVolume = Float(volume)
 
         do {
-            try AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default, options: [.mixWithOthers])
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.mixWithOthers])
             try AVAudioSession.sharedInstance().setActive(true)
             try engine.start()
             isNoiseEnabled = true

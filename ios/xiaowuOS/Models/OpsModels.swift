@@ -108,3 +108,15 @@ struct OpsListResponse<T: Decodable>: Decodable {
     let items: [T]
     let count: Int
 }
+
+struct OpenClawMessageResponse: Decodable {
+    let accepted: Bool
+    let channel: String
+    let targetNode: String
+    let task: OpsTask
+
+    enum CodingKeys: String, CodingKey {
+        case accepted, channel, task
+        case targetNode = "target_node"
+    }
+}

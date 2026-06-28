@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GESP 模拟考试练习 - xiaowuOS</title>
+  <link rel="stylesheet" href="/gesp/mock/styles.css">
+</head>
+<body>
+  <main id="app">
+    <section class="landing" data-view="landing">
+      <div class="reference-bar">
+        <div class="gesp-mark">
+          <span class="seal">CCF</span>
+          <strong>GESP</strong>
+        </div>
+        <button class="nav-tab active" type="button">首页</button>
+        <div class="bar-spacer"></div>
+        <span id="landingClock" class="clock">--:--:--</span>
+        <span class="mock-mark">xiaowuOS 内部研究原型</span>
+      </div>
+
+      <div class="system-grid">
+        <button class="system-card selected" data-system="code">
+          <strong>C++、Python 编程模拟系统</strong>
+          <span>TUOJ 风格：试机须知、考试列表、题目列表、提交状态。</span>
+        </button>
+        <button class="system-card" data-system="scratch">
+          <strong>图形化编程模拟系统</strong>
+          <span>ScratchOJ 风格：准考证登录、我的考试、图形化作答。</span>
+        </button>
+      </div>
+
+      <div class="panel intro">
+        <div class="system-grid">
+          <section class="trial-notice">
+            <h1 id="landingTitle">试机须知</h1>
+            <p id="landingSubtitle">本页面用于熟悉 GESP 试机登录、考试列表、题目入口和提交流程。</p>
+            <a class="download-like" href="#" aria-disabled="true">下载试机用户名和密码</a>
+            <div class="notice-block">
+              <h2>考试形式</h2>
+              <p>C++ / Python 试机系统采用网页答题与代码提交流程，图形化系统采用准考证号和密码登录后进入“我的考试”。</p>
+            </div>
+            <div class="notice-block">
+              <h2>登录说明</h2>
+              <p id="loginHelp">编程系统请输入附件中的试机用户名和密码；图形化系统可使用试机码 062234。</p>
+            </div>
+          </section>
+
+          <section class="login-card">
+            <h2 id="loginTitle">登录考试系统</h2>
+            <form id="loginForm" class="login-grid">
+              <label>
+                <span id="usernameLabel">用户名</span>
+                <input id="username" autocomplete="username" placeholder="用户名" value="gesp_202606_c2_test_50">
+              </label>
+              <label>
+                <span id="passwordLabel">密码</span>
+                <input id="password" type="password" autocomplete="current-password" placeholder="密码" value="shHLM7">
+              </label>
+              <label class="duration-field">
+                考试时长
+                <select id="duration">
+                  <option value="45">45 分钟</option>
+                  <option value="30">30 分钟</option>
+                  <option value="15">15 分钟</option>
+                </select>
+              </label>
+              <button class="primary" type="submit">登入</button>
+            </form>
+            <p id="loginError" class="error-line"></p>
+            <div class="trial-summary" id="trialSummary">正在读取试机账号...</div>
+          </section>
+        </div>
+      </div>
+
+      <div class="panel notes">
+        <h2>系统范围</h2>
+        <ul>
+          <li>已接入附件中的 C++ / Python 试机账号，用于登录校验。</li>
+          <li>编程模拟系统复刻考试列表、题号导航、代码编辑和本地评测反馈。</li>
+          <li>图形化模拟系统复刻舞台、角色、积木区和题目作答流程。</li>
+          <li>本页面是 xiaowuOS 内部练习版，不代表 CCF/GESP 官方系统。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="dashboard hidden" data-view="dashboard">
+      <header class="reference-bar">
+        <div class="gesp-mark">
+          <span class="seal">CCF</span>
+          <strong>GESP</strong>
+        </div>
+        <button class="nav-tab active" type="button" id="dashboardTitle" data-dashboard-tab="list">考试列表</button>
+        <button class="nav-tab code-only" type="button" data-dashboard-tab="submissions">提交状态</button>
+        <button class="nav-tab code-only" type="button" data-dashboard-tab="scores">得分情况</button>
+        <div class="bar-spacer"></div>
+        <span id="dashboardClock" class="clock">--:--:--</span>
+        <span id="dashboardEyebrow" class="user-chip">试机用户</span>
+        <button id="logout" class="plain-link">退出</button>
+      </header>
+
+      <div class="dashboard-layout">
+        <section class="panel exam-list code-dashboard" data-dashboard-panel="list">
+          <h1 id="examListTitle">CCF GESP 2026年6月认证 C++ 1级 - 环境测试</h1>
+          <div class="exam-inner-grid">
+            <aside class="info-card">
+              <h2>信息和通告</h2>
+              <p>开始时间 <code>2026-06-20 08:00:00</code></p>
+              <p>结束时间 <code>2026-06-26 23:00:00</code></p>
+            </aside>
+            <div class="problem-table">
+              <div class="table-head">题目列表</div>
+              <button type="button" class="problem-row" data-code-problem="choice">CCF GESP 模拟测试 C++ 1级 选择题</button>
+              <button type="button" class="problem-row" data-code-problem="judge">CCF GESP 模拟测试 C++ 1级 判断题</button>
+              <button type="button" class="problem-row" data-code-problem="program1">CCF GESP 模拟测试 C++ 1级 编程题1</button>
+              <button type="button" class="problem-row" data-code-problem="program2">CCF GESP 模拟测试 C++ 1级 编程题2</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel exam-list code-dashboard hidden" data-dashboard-panel="submissions">
+          <h1>提交状态</h1>
+          <table class="tuoj-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>题目</th>
+                <th>语言</th>
+                <th>状态</th>
+                <th>得分</th>
+                <th>提交时间</th>
+              </tr>
+            </thead>
+            <tbody id="submissionRows"></tbody>
+          </table>
+        </section>
+
+        <section class="panel exam-list code-dashboard hidden" data-dashboard-panel="scores">
+          <h1>得分情况</h1>
+          <table class="tuoj-table">
+            <thead>
+              <tr>
+                <th>题目</th>
+                <th>满分</th>
+                <th>当前得分</th>
+                <th>状态</th>
+              </tr>
+            </thead>
+            <tbody id="scoreRows"></tbody>
+          </table>
+        </section>
+
+        <section class="panel scratch-dashboard hidden">
+          <div class="scratch-header">
+            <span>我的考试</span>
+            <span id="scratchUserName">考生</span>
+          </div>
+          <table class="scratch-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>试卷标题</th>
+                <th>考试科目</th>
+                <th>其他</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>【模拟2026.06一级】 GESP图形化一级试卷</td>
+                <td>图形化一级</td>
+                <td>随到随考可反复作答<br>开始:2026/06/20 8:00:00 AM<br>结束:2026/06/26 22:00:00 PM</td>
+                <td><button id="startExam" class="danger-button">进入考试</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+      <footer class="tuoj-footer">Powered by xiaowuOS · Internal GESP research prototype</footer>
+    </section>
+
+    <section class="code-problem hidden" data-view="codeProblem">
+      <header class="reference-bar">
+        <div class="gesp-mark">
+          <span class="seal">CCF</span>
+          <strong>GESP</strong>
+        </div>
+        <button class="nav-tab" type="button" id="backToExamList">考试列表</button>
+        <button class="nav-tab active" type="button">题目列表</button>
+        <button class="nav-tab" type="button" data-dashboard-tab="submissions">提交状态</button>
+        <button class="nav-tab" type="button" data-dashboard-tab="scores">得分情况</button>
+        <div class="bar-spacer"></div>
+        <span id="codeProblemClock" class="clock">--:--:--</span>
+        <span id="codeProblemUser" class="user-chip">试机用户</span>
+      </header>
+      <main id="codeProblemContent" class="code-problem-content"></main>
+      <footer class="tuoj-footer">Powered by xiaowuOS · Internal GESP research prototype</footer>
+    </section>
+
+    <section class="exam hidden" data-view="exam">
+      <header class="exam-topbar">
+        <div>
+          <p class="eyebrow">模拟考试</p>
+          <h1 id="examTitle">GESP 一级模拟</h1>
+        </div>
+        <div class="top-actions">
+          <div class="timer" id="timer">45:00</div>
+          <button id="submitExam" class="primary small">交卷</button>
+        </div>
+      </header>
+
+      <div class="exam-layout">
+        <aside class="question-nav panel">
+          <div class="nav-head">
+            <strong>题目</strong>
+            <span id="answeredCount">0/0</span>
+          </div>
+          <div id="questionNav" class="nav-grid"></div>
+        </aside>
+
+        <section class="workspace panel">
+          <div class="question-meta">
+            <span id="questionType">单选题</span>
+            <span id="questionScore">10 分</span>
+          </div>
+          <h2 id="questionTitle"></h2>
+          <p id="questionBody" class="question-body"></p>
+          <div id="choiceArea" class="choices"></div>
+          <div id="codeArea" class="code-wrap hidden">
+            <div class="code-toolbar">
+              <span>代码作答区</span>
+              <button id="resetCode" class="ghost">恢复模板</button>
+            </div>
+            <textarea id="codeEditor" spellcheck="false"></textarea>
+          </div>
+          <div id="scratchArea" class="scratch-wrap hidden">
+            <div class="stage">
+              <div class="stage-sky"></div>
+              <div class="sprite">小猫</div>
+              <p id="stageHint">拖动右侧积木，完成题目要求。</p>
+            </div>
+            <div class="blocks">
+              <button data-block="当开始被点击">当开始被点击</button>
+              <button data-block="重复执行">重复执行</button>
+              <button data-block="移动 10 步">移动 10 步</button>
+              <button data-block="说出结果">说出结果</button>
+            </div>
+            <textarea id="scratchEditor" spellcheck="false" placeholder="在这里按顺序写下你选择的积木，例如：当开始被点击 → 重复执行 → 移动 10 步"></textarea>
+          </div>
+          <div class="question-actions">
+            <button id="prevQuestion" class="ghost">上一题</button>
+            <button id="markQuestion" class="ghost">标记</button>
+            <button id="nextQuestion" class="primary">下一题</button>
+          </div>
+        </section>
+      </div>
+
+      <div id="scratchNotice" class="modal-backdrop hidden">
+        <div class="scratch-modal">
+          <h2>考试须知</h2>
+          <p>已经提交提示，是否继续作答！</p>
+          <p>已经提交试卷，该试卷提交后可以重复作答。</p>
+          <ol>
+            <li>你可以选择“继续作答”，保留之前的作答结果。</li>
+            <li>也可以选择“重新作答”，清空本地作答记录。</li>
+            <li>关闭本窗口将返回我的考试。</li>
+          </ol>
+          <div class="modal-actions">
+            <button id="scratchRestart" class="ghost">重新作答</button>
+            <button id="scratchContinue" class="primary">继续作答</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="scratch-exam hidden" data-view="scratchExam">
+      <header class="scratch-exam-top">
+        <div id="scratchCountdown" class="scratch-countdown">距离结束:14:41:03</div>
+        <div class="scratch-top-actions">
+          <button id="scratchSaveAnswer" type="button">保存作答</button>
+          <button id="scratchSubmitPaper" type="button">交卷</button>
+        </div>
+      </header>
+
+      <main id="scratchNoticePage" class="scratch-notice-page hidden">
+        <h1>考试须知</h1>
+        <div class="scratch-notice-box">
+          <p>请同学们认真阅读考试须知。</p>
+          <p>欢迎您登录青少年编程能力等级考试系统，请按下面的方式使用系统：</p>
+          <p>1、考试形式：闭卷考试，不允许携带任何参考资料及电子设备，只准携带证件和笔。</p>
+          <p>2、提交答案：每道题完成作答，点击提交系统才会接收到您的答案。在程序答题时，点击“检查一下”检查代码，点击“保存”保存当前结果，每道题目最多可提交35次，取最后一次作为最终成绩。交卷后不可再修改和保存作答。</p>
+          <p>3、提前离场：如果你已提前作答完毕，请点击“交卷”按钮后提前结束考试离场，交卷后不可再作答。</p>
+        </div>
+        <button id="scratchStartRealExam" class="scratch-blue-button" type="button">开始考试</button>
+      </main>
+
+      <main id="scratchRealExam" class="scratch-real-layout hidden">
+        <aside class="scratch-side">
+          <section class="scratch-candidate">
+            <h2>考生信息</h2>
+            <p><span>姓名：</span><strong id="scratchExamName">图形化试机用户</strong></p>
+            <p><span>科目：</span><strong>图形化一级</strong></p>
+            <p><span>准考证：</span><strong>062234</strong></p>
+          </section>
+          <section class="scratch-number-group">
+            <h2>单选:</h2>
+            <div id="scratchSingleNav" class="scratch-number-grid"></div>
+          </section>
+          <section class="scratch-number-group">
+            <h2>判断:</h2>
+            <div id="scratchJudgeNav" class="scratch-number-grid"></div>
+          </section>
+          <section class="scratch-number-group">
+            <h2>编程:</h2>
+            <div id="scratchProgramNav" class="scratch-number-grid two"></div>
+          </section>
+        </aside>
+
+        <section class="scratch-question-panel">
+          <h2 id="scratchQuestionTitle">1. 单选题</h2>
+          <p id="scratchQuestionBody" class="scratch-question-body"></p>
+          <div id="scratchChoiceList" class="scratch-choice-list"></div>
+          <div id="scratchProgramArea" class="scratch-program-area hidden">
+            <div class="scratch-stage-small">舞台预览</div>
+            <textarea id="scratchProgramAnswer" placeholder="在这里完成图形化编程题的作答记录"></textarea>
+          </div>
+        </section>
+      </main>
+
+      <footer class="scratch-bottom-nav">
+        <span id="scratchBottomName">考生姓名:图形化试机用户</span>
+        <button id="scratchListMode" type="button">列表模式</button>
+        <button id="scratchPrev" type="button">上一题</button>
+        <button id="scratchNext" type="button">下一题</button>
+      </footer>
+
+      <div id="scratchResumeModal" class="modal-backdrop hidden">
+        <div class="scratch-modal official">
+          <h2>已经提交提示，是否继续作答!</h2>
+          <p>已经提交试卷，该试卷提交后可以重复作答!</p>
+          <ol>
+            <li>你可以选择“继续作答”，保留之前的作答结果。</li>
+            <li>清空作答记录“重新作答”。</li>
+            <li>“关闭”本窗口结束作答。</li>
+          </ol>
+          <div class="modal-actions">
+            <button id="scratchResumeReset" class="ghost">重新作答</button>
+            <button id="scratchResumeContinue" class="primary">继续作答</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="scratchGuideTip" class="scratch-guide-tip hidden">
+        <h2>头部信息</h2>
+        <p>【保存作答】用来临时保存试卷，【交卷】用来结束考试。</p>
+        <div>
+          <button id="scratchGuideClose" type="button">关闭</button>
+          <button type="button">前一个</button>
+          <button type="button">下一个</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="result hidden" data-view="result">
+      <div class="panel result-card">
+        <p class="eyebrow">考试结束</p>
+        <h1 id="scoreText">0 分</h1>
+        <p id="resultSummary"></p>
+        <div id="resultBreakdown" class="breakdown"></div>
+        <div class="result-actions">
+          <button id="reviewExam" class="ghost">查看答题</button>
+          <button id="restartExam" class="primary">再练一次</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/gesp/mock/app.js"></script>
+</body>
+</html>

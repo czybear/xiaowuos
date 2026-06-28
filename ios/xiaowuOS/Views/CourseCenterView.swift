@@ -12,6 +12,7 @@ struct CourseCenterView: View {
                         .foregroundStyle(.secondary)
 
                     pomodoroCard
+                    scheduleCard
                     courseList
                     learningRecord
                     materialEntry
@@ -45,10 +46,6 @@ struct CourseCenterView: View {
                         .font(.largeTitle.weight(.bold))
                         .foregroundStyle(.blue)
                         .monospacedDigit()
-
-                    Image(systemName: "chevron.right")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(.secondary)
                 }
             }
             .padding(16)
@@ -56,6 +53,28 @@ struct CourseCenterView: View {
             .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 8))
         }
         .buttonStyle(.plain)
+    }
+
+    private var scheduleCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .firstTextBaseline) {
+                Text("今日安排")
+                    .font(.headline)
+
+                Spacer()
+
+                Text("学习节奏")
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(.secondary)
+            }
+
+            VStack(alignment: .leading, spacing: 10) {
+                LearningScheduleRow(time: "16:00", title: "未来创客", note: "作品搭建")
+                LearningScheduleRow(time: "20:30", title: "番茄钟", note: "25 分钟专注")
+            }
+        }
+        .padding(16)
+        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 8))
     }
 
     private var courseList: some View {
@@ -112,6 +131,32 @@ struct CourseCenterView: View {
         }
         .padding(16)
         .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 8))
+    }
+}
+
+private struct LearningScheduleRow: View {
+    let time: String
+    let title: String
+    let note: String
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Text(time)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.blue)
+                .monospacedDigit()
+                .frame(width: 52, alignment: .leading)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.subheadline.weight(.medium))
+                Text(note)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
+            Spacer()
+        }
     }
 }
 

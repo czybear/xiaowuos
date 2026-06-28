@@ -23,10 +23,10 @@ STUDENT_RECORD_FIELD_ALIASES = {
     "external_id": ["id", "编号", "记录id", "记录ID", "ID", "报名ID", "订单ID"],
     "student_name": ["student_name", "name", "学员", "学员姓名", "学生", "学生姓名", "姓名", "孩子姓名"],
     "phone": ["phone", "mobile", "手机号", "手机", "联系电话", "家长手机", "家长手机号"],
-    "course_title": ["course", "course_title", "课程", "课程名称", "报名课程", "购买课程"],
+    "course_title": ["course", "course_title", "课程", "课程名称", "报名课程", "购买课程", "班级", "班级名称"],
     "teacher": ["teacher", "老师", "讲师", "顾问", "负责老师", "班主任"],
-    "status": ["status", "状态", "学习状态", "报名状态", "支付状态"],
-    "record_time": ["time", "created_at", "record_time", "创建时间", "报名时间", "记录时间", "下单时间", "时间"],
+    "status": ["status", "状态", "学习状态", "报名状态", "支付状态", "绑定状态", "学员状态"],
+    "record_time": ["最新上课时间", "time", "record_time", "报名时间", "记录时间", "下单时间", "时间", "created_at", "创建时间"],
     "remark": ["remark", "备注", "说明", "跟进记录", "回访记录"],
 }
 
@@ -117,8 +117,35 @@ def normalize_record(raw: dict[str, Any]) -> dict:
     for target, aliases in FIELD_ALIASES.items():
         normalized[target] = first_value(raw, aliases)
 
+    class_name = first_value(raw, ["班级", "班级名称"])
+    class_time = first_value(raw, ["上课时间", "时间"])
+    course_type = first_value(raw, ["课程类型"])
+    student_count = first_value(raw, ["学员数量"])
+    lesson_cost = first_value(raw, ["课时消耗"])
+    created_at = first_value(raw, ["创建时间"])
+
     if not normalized["external_id"]:
-        normalized["external_id"] = normalized["title"]
+        parts = [normalized["title"], class_name, class_time]
+        normalized["external_id"] = "|".join(part for part in parts if part)
+
+    if class_name and not normalized["category"]:
+        normalized["category"] = class_name
+
+    details = []
+    if class_time:
+        details.append(f"上课时间：{class_time}")
+    if lesson_cost:
+        details.append(f"课时消耗：{lesson_cost}")
+    if student_count:
+        details.append(f"学员数量：{student_count}")
+    if course_type:
+        details.append(f"课程类型：{course_type}")
+    if created_at:
+        details.append(f"创建时间：{created_at}")
+    if details and not normalized["summary"]:
+        normalized["summary"] = "；".join(details)
+    if course_type and not normalized["status"]:
+        normalized["status"] = course_type
 
     if not normalized["teacher"]:
         normalized["teacher"] = "澄木老师"
@@ -131,6 +158,29 @@ def normalize_student_record(raw: dict[str, Any]) -> dict:
 
     for target, aliases in STUDENT_RECORD_FIELD_ALIASES.items():
         normalized[target] = first_value(raw, aliases)
+
+    total_lessons = first_value(raw, ["总课时"])
+    remaining_lessons = first_value(raw, ["剩余课时"])
+    remaining_points = first_value(raw, ["剩余积分"])
+    birthday = first_value(raw, ["生日日期"])
+    expires_at = first_value(raw, ["到期时间"])
+    created_at = first_value(raw, ["创建时间"])
+
+    if not normalized["remark"]:
+        details = []
+        if total_lessons:
+            details.append(f"总课时：{total_lessons}")
+        if remaining_lessons:
+            details.append(f"剩余课时：{remaining_lessons}")
+        if remaining_points:
+            details.append(f"剩余积分：{remaining_points}")
+        if birthday:
+            details.append(f"生日日期：{birthday}")
+        if expires_at:
+            details.append(f"到期时间：{expires_at}")
+        if created_at:
+            details.append(f"创建时间：{created_at}")
+        normalized["remark"] = "；".join(details)
 
     if not normalized["external_id"]:
         parts = [
